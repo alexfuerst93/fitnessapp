@@ -1,11 +1,11 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 class Exercise_Pool(models.Model):
-    #user_id
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField("Name of Exercise", max_length=100)
-    max_calc = models.BooleanField("Include in Max-Calculator", null=True, blank=True)
-    track_perform = models.BooleanField("Track Performance", null=True, blank=True)
-    # muscle group (for sorting purposes) --> Should be a dropdown!
+    muscle = models.CharField("Name of Musclegroup", max_length=50)
+    track_perform = models.CharField(max_length=5)
     
     def __str__(self):
         return self.title

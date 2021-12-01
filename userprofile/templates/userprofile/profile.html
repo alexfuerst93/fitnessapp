@@ -28,6 +28,9 @@
 
 <h2>Manage all your exercises (add/delete/modify)</h2>
 
+{% for exercise in exercises %}
+<p>{{ exercise.title }}</p>
+{% endfor %}
 
 <h2>Add an Exercise to the Database</h2>
 <form action="{% url 'profile' %}" method="POST">

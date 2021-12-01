@@ -46,7 +46,10 @@ def profile(request):
 
     elif "added_exercise" in request.POST:
         print(request.POST)
-        exercises.create(title=request.POST["name_of_exercise"])
+        if request.POST["track"]: #bug
+            exercises.create(user_id=request.user, title=request.POST["name_of_exercise"], muscle=request.POST["muscle"], track_perform="yes")
+        else:
+            exercises.create(user_id=request.user, title=request.POST["name_of_exercise"], muscle=request.POST["muscle"], track_perform="no")
         return render(request, "userprofile/profile.html", {"exercises" : exercises, "form" : add_exercise})
 
         # def calc(reps, weight):
