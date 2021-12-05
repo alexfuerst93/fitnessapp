@@ -3,34 +3,47 @@
 
 <h1>This is your very own profile!</h1>
 <h2>Calculate your Max Rep</h2>
-<p>You can potentially add to another database to track progress</p>
-<form action="{% url 'profile' %}" method="POST">
-    {% csrf_token %}
-    <select name="exercise">
-        <option value="nothing_selected">Choose your Exercise</option>
-        {% for exercise in exercises %}
-        <option value="{{ exercise.title }}">{{ exercise.title }}</option>
-        {% endfor %}
-    </select>
-    <input type="text" placeholder="Weight", name="weight">
-    <input type="text" placeholder="Reps", name="reps">
 
-    <input type="submit" name="calculated_maxrep">
-    <input type="submit" name="calculate_and_safe">
 
-</form>
+<ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item"><a class="nav-link active" id="calculate-tab" data-toggle="tab" href="#tab1" role="tab">Calculate</a></li>
+    <li class="nav-item"><a class="nav-link" id="add-new-max-tab" data-toggle="tab" href="#tab2" role="tab">Add new Max Exercise</a></li>
+</ul>
+<div class="tab-content">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+        <form action="{% url 'profile' %}" method="POST">
+            {% csrf_token %}
+            <select name="exercise">
+                <option value="nothing_selected">Choose your Exercise</option>
+                {% for entry in maxvals %}
+                <option value="{{ entry.exercise }}">{{ entry.exercise }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" placeholder="Weight", name="weight">
+            <input type="text" placeholder="Reps", name="reps">
+            <button name="calculated_maxrep">Calculate!</button>
+        </form>
+        <p>{{ ergebnis }}</p>
+    </div>
+    <div class="tab-pane fade" id="tab2" role="tabpanel">
+        <form action="{% url 'profile' %}" method="POST">
+            {% csrf_token %}
+            <input type="text" placeholder="Create a new exercise", name="new_exercise">
+            <input type="text" placeholder="Weight", name="weight">
+            <input type="text" placeholder="Reps", name="reps">
+            <button name="calculate_and_safe">Add new Max Val Exercise!</button>
+        </form>
+    </div>
+  </div>
 
-<p>{{ ergebnis }}</p>
 
 <h2>View your current Max-reps</h2>
 
 <h2>View your overall progress: "Awesome Plot"</h2>
 
-<h2>Manage all your exercises (add/delete/modify)</h2>
 
-{% for exercise in exercises %}
-<p>{{ exercise.title }}</p>
-{% endfor %}
+
+
 
 <h2>Add an Exercise to the Database</h2>
 <form action="{% url 'profile' %}" method="POST">
@@ -39,6 +52,19 @@
     <input type="submit" name="added_exercise">
 </form>
 
-<h2>Here's a link to your current workout plan:</h2>
+<h2>Manage all your exercises (add/delete/modify)</h2>
+
+{% for musclegroup in musclegroups %}
+    <h3>{{ musclegroup }}</h3>
+    {% for exercise in exercises %}
+        {% if exercise.muscle == musclegroup %}
+        <p>{{ exercise.title }}</p>
+        {% endif %}
+    {% endfor %}
+{% endfor %}
+
+
+<h2>Here's a link to the workout section</h2>
+<p>Contains all former workout plans as well as the current one</p>
 
 {% endblock %}

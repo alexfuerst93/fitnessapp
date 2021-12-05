@@ -1,8 +1,6 @@
 from django import forms
 
-class CreateExercise(forms.Form):
-    name_of_exercise = forms.CharField(label="Add Exercise", max_length=100)
-    muscle = forms.ChoiceField(label="Primary Muscle", choices = [
+musclegroups = [
         ("legs", "Legs"),
         ("chest", "Chest"),
         ("back", "Back"),
@@ -11,7 +9,11 @@ class CreateExercise(forms.Form):
         ("triceps", "Triceps"),
         ("core", "Core"),
         ("calves", "Calves")
-        ])
+        ]
+
+class CreateExercise(forms.Form):
+    name_of_exercise = forms.CharField(label="Add Exercise", max_length=100)
+    muscle = forms.ChoiceField(label="Primary Muscle", choices = musclegroups)
     track = forms.BooleanField(label="Track Performance", required=False)
     #max_value = forms.DecimalField(label="Enter your Max Value", required=False)
     #timestamp = forms.DateTimeField(auto_now=False, auto_now_add=True) #should take the current date at creation, but take no updates
