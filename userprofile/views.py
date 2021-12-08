@@ -84,7 +84,7 @@ def profile(request):
     elif "modified_exercise" in request.POST:
         print(request.POST)
         pk = [key for key in request.POST.keys()]
-        form_modify_exercise = Exercise_Pool.objects.get(id = pk[2]) # retrieve ID from model
+        form_modify_exercise = Exercise_Pool.objects.get(id = pk[3]) # retrieve ID from model
         modified_exercise = Exercise_Pool_Form(request.POST, instance=form_modify_exercise) # create instance of that entry and plug it into the form
         modified_exercise.save() # update the model form based on POST data
         return redirect("profile")

@@ -58,7 +58,7 @@
         <p>High: {{ exercise.high_range }} | Mid: {{ exercise.mid_range }} | Low: {{ exercise.low_range }}</p>
         <form action="{% url 'profile' %}" method="POST">
             {% csrf_token %}
-            {{ form.title }}
+            {{ form.title }} {{ form.muscle }}
             <input type="hidden" name="{{ exercise.id }}">
             <button name="modified_exercise">Modify</button>
             <button name="deleted_exercise">Delete</button>
