@@ -8,7 +8,7 @@ from django.contrib.auth import login, logout, authenticate
 
 # database tables
 from .models import MaxValue, Exercise_Pool
-from .forms import CreateExercise, musclegroups
+from .forms import CreateExercise, musclegroups, CreateMaxValue, dropdown_exercises
 
 def startpage(request):
     if request.method == "GET":
@@ -32,27 +32,39 @@ def profile(request):
     exercises = Exercise_Pool.objects.filter(user_id=request.user)
     #form
     add_exercise = CreateExercise()
+    form_maxval = CreateMaxValue()
+    
 
     sorted_musclegroups = [choice[0] for choice in musclegroups]
     sorted_musclegroups.sort()
 
     if request.method == "GET":
-        return render(request, "userprofile/profile.html", {"maxvals" : max_vals, "exercises" : exercises, "form" : add_exercise, "musclegroups" : sorted_musclegroups})
+        wups = []
+        for val in max_vals:
+            wups.append(val.exercise)
+        print(wups)
+        return render(request, "userprofile/profile.html", {"maxvals" : max_vals, "exercises" : exercises, "form" : add_exercise, "form_maxval" : form_maxval, "musclegroups" : sorted_musclegroups})
 
     elif "calculated_maxrep" in request.POST:
         # form validations are missing
         weight = float(request.POST["weight"])
         reps = float(request.POST["reps"])
         result = int(round(0.033 * reps * weight + weight, 0))
-        return render(request, "userprofile/profile.html", {"ergebnis" : f"Your Max value: {result}", "form" : add_exercise, "musclegroups" : sorted_musclegroups})
+        return render(request, "userprofile/profile.html", {"ergebnis" : f"Your Max value: {result}", "form" : add_exercise, "form_maxval" : form_maxval, "musclegroups" : sorted_musclegroups})
 
     elif "calculate_and_safe" in request.POST:
         print(request.POST)
-        weight = float(request.POST["weight"])
-        reps = float(request.POST["reps"])
-        result = int(round(0.033 * reps * weight + weight, 0))
-        max_vals.create(user_id=request.user, exercise=request.POST["new_exercise"], max_value=result)
-        return render(request, "userprofile/profile.html", {"maxvals" : max_vals, "ergebnis" : f"Your new Max value for {request.POST['new_exercise']} is: {result}", "form" : add_exercise, "musclegroups" : sorted_musclegroups})
+        # if form_maxval.is_valid(): # why isnt the form validating?
+        if request.POST["choose_exercise"] == "0" and request.POST["create_exercise"] == "":
+            return render(request, "userprofile/startpage.html")
+        elif request.POST["choose_exercise"] != "0" and request.POST["create_exercise"] != "":
+            return render(request, "userprofile/startpage.html")
+        else:
+            weight = float(request.POST["weight"])
+            reps = float(request.POST["reps"])
+            result = int(round(0.033 * reps * weight + weight, 0))
+            max_vals.create(user_id=request.user, exercise=request.POST["create_exercise"], max_value=result)
+            return render(request, "userprofile/profile.html", {"maxvals" : max_vals, "ergebnis" : f"Your new Max value for {request.POST['create_exercise']} is: {result}", "form" : add_exercise, "form_maxval" : form_maxval, "musclegroups" : sorted_musclegroups})
 
     elif "added_exercise" in request.POST:
         # what if the user wants to add 2 identical exercises?
