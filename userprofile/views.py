@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.utils import timezone
 
 #user creation
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -7,8 +8,8 @@ from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
 
 # database tables
-from .models import MaxValue, Exercise_Pool
-from .forms import CreateExercise, musclegroups, CreateMaxValue, dropdown_exercises
+from .models import MaxValue, Exercise_Pool, musclegroups
+from .forms import CreateMaxValue, Exercise_Pool_Form
 
 def startpage(request):
     if request.method == "GET":
@@ -31,18 +32,14 @@ def profile(request):
     max_vals = MaxValue.objects.filter(user_id=request.user)
     exercises = Exercise_Pool.objects.filter(user_id=request.user)
     #form
-    add_exercise = CreateExercise()
+    add_exercise = Exercise_Pool_Form()
     form_maxval = CreateMaxValue()
     
 
-    sorted_musclegroups = [choice[0] for choice in musclegroups]
+    sorted_musclegroups = [musclegroup[0] for musclegroup in musclegroups]
     sorted_musclegroups.sort()
 
     if request.method == "GET":
-        wups = []
-        for val in max_vals:
-            wups.append(val.exercise)
-        print(wups)
         return render(request, "userprofile/profile.html", {"maxvals" : max_vals, "exercises" : exercises, "form" : add_exercise, "form_maxval" : form_maxval, "musclegroups" : sorted_musclegroups})
 
     elif "calculated_maxrep" in request.POST:
@@ -63,18 +60,35 @@ def profile(request):
             weight = float(request.POST["weight"])
             reps = float(request.POST["reps"])
             result = int(round(0.033 * reps * weight + weight, 0))
-            max_vals.create(user_id=request.user, exercise=request.POST["create_exercise"], max_value=result)
+            max_vals.create(user_id=request.user, exercise=request.POST["create_exercise"], max_value=result, timestamp=timezone.now())
             return render(request, "userprofile/profile.html", {"maxvals" : max_vals, "ergebnis" : f"Your new Max value for {request.POST['create_exercise']} is: {result}", "form" : add_exercise, "form_maxval" : form_maxval, "musclegroups" : sorted_musclegroups})
 
     elif "added_exercise" in request.POST:
         # what if the user wants to add 2 identical exercises?
-        check = request.POST.get("track", False)
-        if check:
-            exercises.create(user_id=request.user, title=request.POST["name_of_exercise"], muscle=request.POST["muscle"], track_perform="yes")
-        else:
-            exercises.create(user_id=request.user, title=request.POST["name_of_exercise"], muscle=request.POST["muscle"], track_perform="no")
+        # wrap this in a try+except to catch Model Validation error and display the error in a dictionary
+        print(request.POST)
+        form_add_exercise = Exercise_Pool_Form(request.POST)
+        new_exercise = form_add_exercise.save(commit=False)
+        new_exercise.user_id = request.user
+        new_exercise.timestamp = timezone.now()
+        new_exercise.save()
         return render(request, "userprofile/profile.html", {"exercises" : exercises, "form" : add_exercise, "musclegroups" : sorted_musclegroups})
 
+    elif "deleted_exercise" in request.POST:
+        print(request.POST)
+        pk = [key for key in request.POST.keys()]
+        deleted = Exercise_Pool.objects.get(id = pk[1]).delete()
+        print(deleted)
+        return redirect("profile")
+
+    elif "modified_exercise" in request.POST:
+        print(request.POST)
+        pk = [key for key in request.POST.keys()]
+        form_modify_exercise = Exercise_Pool.objects.get(id = pk[2]) # retrieve ID from model
+        modified_exercise = Exercise_Pool_Form(request.POST, instance=form_modify_exercise) # create instance of that entry and plug it into the form
+        modified_exercise.save() # update the model form based on POST data
+        return redirect("profile")
+        # ValueError: The Exercise_Pool could not be changed because the data didn't validate.
 
 
 

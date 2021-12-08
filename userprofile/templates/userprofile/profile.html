@@ -13,14 +13,8 @@
     <div class="tab-pane fade show active" id="tab1" role="tabpanel">
         <form action="{% url 'profile' %}" method="POST">
             {% csrf_token %}
-            <select name="exercise">
-                <option value="nothing_selected">Choose your Exercise</option>
-                {% for entry in maxvals %}
-                <option value="{{ entry.exercise }}">{{ entry.exercise }}</option>
-                {% endfor %}
-            </select>
-            <input type="text" placeholder="Weight", name="weight">
-            <input type="text" placeholder="Reps", name="reps">
+            <input type="number" step="0.01" placeholder="Weight", name="weight">
+            <input type="number" step="0.01" placeholder="Reps", name="reps">
             <button name="calculated_maxrep">Calculate!</button>
         </form>
         <p>{{ ergebnis }}</p>
@@ -36,31 +30,39 @@
 
 
 <h2>View your current Max-reps</h2>
-<p>If database is empty, add some explaining text.</p>
+
+{% if not maxvals %}
+<p>You currently don't have any max values set. Use the above calculator to add new exercises!</p>
+{% endif %}
+
 {% for maxval in maxvals %}
-<p>{{ maxval.exercise }} | Max Value: {{ maxval.max_value }}</p>
+<p>{{ maxval.exercise }} | Max Value: {{ maxval.max_value }} | Record set at: {{ maxval.timestamp|date:"d.m.Y H:i" }}</p>
 {% endfor %}
 
-<h2>View your overall progress: "Awesome Plot"</h2>
-
-
-
-
-
-<h2>Add an Exercise to the Database</h2>
+<h2>Manage all your exercises (add/delete/modify)</h2>
 <form action="{% url 'profile' %}" method="POST">
     {% csrf_token %}
     {{ form }}
     <input type="submit" name="added_exercise">
 </form>
 
-<h2>Manage all your exercises (add/delete/modify)</h2>
+{% if not exercises %}
+<p>Create some exercises to build your workout!</p>
+{% endif %}
 
 {% for musclegroup in musclegroups %}
     <h3>{{ musclegroup }}</h3>
     {% for exercise in exercises %}
         {% if exercise.muscle == musclegroup %}
         <p>{{ exercise.title }}</p>
+        <p>High: {{ exercise.high_range }} | Mid: {{ exercise.mid_range }} | Low: {{ exercise.low_range }}</p>
+        <form action="{% url 'profile' %}" method="POST">
+            {% csrf_token %}
+            {{ form.title }}
+            <input type="hidden" name="{{ exercise.id }}">
+            <button name="modified_exercise">Modify</button>
+            <button name="deleted_exercise">Delete</button>
+        </form>
         {% endif %}
     {% endfor %}
 {% endfor %}
