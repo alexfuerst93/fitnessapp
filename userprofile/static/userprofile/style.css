@@ -10,3 +10,9 @@ img {
 #tab2 {
     background-color: #e6f5ff;
 }
+
+.maxvals {
+    font-size: 0.9em;
+    color: white;
+    background-color: #2181ff;
+}

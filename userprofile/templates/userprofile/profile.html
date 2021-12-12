@@ -7,6 +7,7 @@
     <h1>This is your very own profile!</h1>
 </div>
 
+<br>
 <h2>Calculate your Max Rep</h2>
 <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item"><a class="nav-link active" id="calculate-tab" data-toggle="tab" href="#tab1" role="tab">Calculate</a></li>
@@ -37,20 +38,33 @@
         </form>
     </div>
 </div>
-<p>{{ error }}</p>
-<p>{{ ergebnis }}</p>
+{% if error %}
+<p class="bg-danger p-3">{{ error }}</p>
+{% endif %}
+{% if ergebnis %}
+<p class="bg-success p-3">{{ ergebnis }}</p>
+{% endif %}
 
 
-
-<h2>View your current Max-reps</h2>
+<br>
+<h2>Your current Max-reps</h2>
 
 {% if not maxvals %}
 <p>You currently don't have any max values set. Use the above calculator to add new exercises!</p>
 {% endif %}
 
+<div class="row">
 {% for maxval in maxvals %}
-<p>{{ maxval.exercise }} | Max Value: {{ maxval.max_value }} | Record set at: {{ maxval.timestamp|date:"d.m.Y H:i" }}</p>
+    <div class="col-2 p-3 m-3 maxvals text-left">
+        <p><b>{{ maxval.exercise }}</b><br>Max Value: {{ maxval.max_value }} KG<br> Set: {{ maxval.timestamp|date:"d.m.Y H:i" }}</p>
+        <form action="{% url 'profile' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="{{ maxval.id }}">
+            <button class="btn btn-outline-light" name="delete_maxval">Del</button>
+        </form>
+    </div>
 {% endfor %}
+</div>
 
 <h2>Manage all your exercises (add/delete/modify)</h2>
 <form action="{% url 'profile' %}" method="POST">
@@ -80,8 +94,10 @@
     {% endfor %}
 {% endfor %}
 
+<p>Here is a link to the configuration</p>
 <h2>Continue your current workout!</h2>
 <h2>View all your completed mesocycles!</h2>
+<p>Including a button to create a new one!</p>
 
 </div>
 {% endblock %}

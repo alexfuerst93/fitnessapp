@@ -11,6 +11,8 @@ class MaxValue(models.Model):
     # blank=True makes the field optional
     # null=True allows to write NULL to the database
 
+    
+
     def __str__(self):
         return self.exercise
 

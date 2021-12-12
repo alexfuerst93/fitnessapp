@@ -31,7 +31,6 @@ def startpage(request):
 def profile(request):
     #databases
     max_vals = MaxValue.objects.filter(user_id=request.user)
-    # max_vals_latest = MaxValue.objects.latest("timestamp")
     exercises = Exercise_Pool.objects.filter(user_id=request.user)
     #form
     add_exercise = Exercise_Pool_Form()
@@ -75,9 +74,17 @@ def profile(request):
 
         else:
             result = epley(float(request.POST["weight"]), float(request.POST["reps"]))
-            max_vals.create(user_id=request.user, exercise=request.POST["choose_exercise"], max_value=result, timestamp=timezone.now())
+            update_max_value = MaxValue.objects.get(id = request.POST["choose_exercise"])
+            update_max_value.max_value = result
+            update_max_value.timestamp = timezone.now()
+            update_max_value.save()
             return redirect("profile")
-        # per unique exercise, show the most up-to-date max value
+
+    elif "delete_maxval" in request.POST:
+        print(request.POST)
+        pk = [key for key in request.POST.keys()]
+        deleted = MaxValue.objects.get(id = pk[1]).delete()
+        return redirect("profile")
 
     elif "added_exercise" in request.POST:
         # what if the user wants to add 2 identical exercises?
