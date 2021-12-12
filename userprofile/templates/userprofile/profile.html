@@ -66,11 +66,19 @@
 {% endfor %}
 </div>
 
-<h2>Manage all your exercises (add/delete/modify)</h2>
-<form action="{% url 'profile' %}" method="POST">
+<h2>Manage your secondary exercises</h2>
+<form action="{% url 'profile' %}" method="POST" class="p-3" id="sec_exercise">
     {% csrf_token %}
-    {{ form }}
-    <input type="submit" name="added_exercise">
+    <div class="form-row">
+        <div class="form-group col-6">{{ form.title.label_tag }} {{ form.title }}</div>
+        <div class="form-group col-6">{{ form.muscle.label_tag }} {{ form.muscle }}</div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col">{{ form.high_range.label_tag }} {{ form.high_range }}</div>
+        <div class="form-group col">{{ form.mid_range.label_tag }} {{ form.mid_range }}</div>
+        <div class="form-group col">{{ form.low_range.label_tag }} {{ form.low_range }}</div>
+    </div>
+    <button class="btn btn-success" name="added_exercise">Add new secondary exercise</button>
 </form>
 
 {% if not exercises %}

@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-from django.core.validators import MaxValueValidator
+from django.core.validators import MinValueValidator
 
 class MaxValue(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -32,9 +32,9 @@ class Exercise_Pool(models.Model):
     title = models.CharField("Name of Exercise", max_length=100)
     muscle = models.CharField("Name of Musclegroup", max_length=50, choices=musclegroups, default="chest")
     timestamp = models.DateTimeField()
-    high_range = models.PositiveIntegerField(blank=True, default=0, validators=[MaxValueValidator(20)]) # 12 reps
-    mid_range = models.PositiveIntegerField(blank=True, default=0, validators=[MaxValueValidator(20)]) # 10 reps
-    low_range = models.PositiveIntegerField(blank=True, default=0, validators=[MaxValueValidator(20)]) # 8 reps
+    high_range = models.PositiveIntegerField(blank=True, validators=[MinValueValidator(1)]) # 12 reps
+    mid_range = models.PositiveIntegerField(blank=True, validators=[MinValueValidator(1)]) # 10 reps
+    low_range = models.PositiveIntegerField(blank=True, validators=[MinValueValidator(1)]) # 8 reps
     
     def __str__(self):
         return self.title

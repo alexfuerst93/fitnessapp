@@ -95,6 +95,8 @@ def profile(request):
         new_exercise.user_id = request.user
         new_exercise.timestamp = timezone.now()
         new_exercise.save()
+        # try if form is valid
+        # expect "ValueError" --> error : Enter weights higher than 0 and lower than 20
         return render(request, "userprofile/profile.html", {"exercises" : exercises, "form" : add_exercise, "musclegroups" : sorted_musclegroups})
 
     elif "deleted_exercise" in request.POST:
