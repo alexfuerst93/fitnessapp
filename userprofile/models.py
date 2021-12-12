@@ -31,13 +31,9 @@ class Exercise_Pool(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField("Name of Exercise", max_length=100)
     muscle = models.CharField("Name of Musclegroup", max_length=50, choices=musclegroups, default="chest")
-    timestamp = models.DateTimeField()
-    high_range = models.PositiveIntegerField(blank=True, validators=[MinValueValidator(1)]) # 12 reps
-    mid_range = models.PositiveIntegerField(blank=True, validators=[MinValueValidator(1)]) # 10 reps
-    low_range = models.PositiveIntegerField(blank=True, validators=[MinValueValidator(1)]) # 8 reps
+    high_range = models.PositiveIntegerField(blank=True, null=True, validators=[MinValueValidator(1)])
+    mid_range = models.PositiveIntegerField(blank=True, null=True, validators=[MinValueValidator(1)])
+    low_range = models.PositiveIntegerField(blank=True, null=True, validators=[MinValueValidator(1)])
     
     def __str__(self):
         return self.title
-
-# Model Forms: https://docs.djangoproject.com/en/3.2/topics/forms/modelforms/
-# dislaying forms in templates: https://docs.djangoproject.com/en/3.2/topics/forms/#working-with-form-templates

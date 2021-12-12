@@ -87,23 +87,24 @@ def profile(request):
         return redirect("profile")
 
     elif "added_exercise" in request.POST:
-        # what if the user wants to add 2 identical exercises?
-        # wrap this in a try+except to catch Model Validation error and display the error in a dictionary
         print(request.POST)
-        form_add_exercise = Exercise_Pool_Form(request.POST)
-        new_exercise = form_add_exercise.save(commit=False)
-        new_exercise.user_id = request.user
-        new_exercise.timestamp = timezone.now()
-        new_exercise.save()
-        # try if form is valid
-        # expect "ValueError" --> error : Enter weights higher than 0 and lower than 20
-        return render(request, "userprofile/profile.html", {"exercises" : exercises, "form" : add_exercise, "musclegroups" : sorted_musclegroups})
+        if request.POST["title"] in [exercise.title for exercise in exercises]:
+            render_dict["form_error"] = f"You already have an exercise called {request.POST['title']}!"
+            return render(request, "userprofile/profile.html", render_dict)
+        try:
+            form_add_exercise = Exercise_Pool_Form(request.POST)
+            new_exercise = form_add_exercise.save(commit=False)
+            new_exercise.user_id = request.user
+            new_exercise.save()
+            return redirect("profile")
+        except ValueError:
+            render_dict["form_error"] = "You entered invalid data."
+            return render(request, "userprofile/profile.html", render_dict)
 
     elif "deleted_exercise" in request.POST:
         print(request.POST)
         pk = [key for key in request.POST.keys()]
-        deleted = Exercise_Pool.objects.get(id = pk[1]).delete()
-        print(deleted)
+        Exercise_Pool.objects.get(id = pk[1]).delete()
         return redirect("profile")
 
     elif "modified_exercise" in request.POST:
@@ -113,9 +114,6 @@ def profile(request):
         modified_exercise = Exercise_Pool_Form(request.POST, instance=form_modify_exercise) # create instance of that entry and plug it into the form
         modified_exercise.save() # update the model form based on POST data
         return redirect("profile")
-        # make it possible to ONLY change either exercise_name or musclegroup by setting the modelfield blank=True
-        # Idea: make another html page, where the deleting and modifying and adding of exercises is possible.
-
 
 
 def logoutuser(request):

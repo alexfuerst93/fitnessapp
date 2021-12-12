@@ -2,6 +2,11 @@ h1 {
     color: red;
 }
 
+h3 {
+    font-size: 0.9em;
+    color: white;
+}
+
 img {
     max-width: 25%;
     max-height: 25%;
@@ -11,12 +16,16 @@ img {
     background-color: #e6f5ff;
 }
 
-#sec_exercise {
-    background-color: #e0ffe7;
-}
-
 .maxvals {
     font-size: 0.9em;
     color: white;
     background-color: #2181ff;
+}
+
+#sec_exercise {
+    background-color: #e0ffe7;
+}
+
+.overview_exercises {
+    background-color: #32ba5b;
 }

@@ -56,7 +56,7 @@
 <div class="row">
 {% for maxval in maxvals %}
     <div class="col-2 p-3 m-3 maxvals text-left">
-        <p><b>{{ maxval.exercise }}</b><br>Max Value: {{ maxval.max_value }} KG<br> Set: {{ maxval.timestamp|date:"d.m.Y H:i" }}</p>
+        <p><b>{{ maxval.exercise }}</b><br>Max Value: {{ maxval.max_value }} KG<br>{{ maxval.timestamp|date:"d.m.Y H:i" }}</p>
         <form action="{% url 'profile' %}" method="POST">
             {% csrf_token %}
             <input type="hidden" name="{{ maxval.id }}">
@@ -73,6 +73,7 @@
         <div class="form-group col-6">{{ form.title.label_tag }} {{ form.title }}</div>
         <div class="form-group col-6">{{ form.muscle.label_tag }} {{ form.muscle }}</div>
     </div>
+    <p>These fields are optional. However, you will need to provide your current weight to have them displayed in your workout plan:</p>
     <div class="form-row">
         <div class="form-group col">{{ form.high_range.label_tag }} {{ form.high_range }}</div>
         <div class="form-group col">{{ form.mid_range.label_tag }} {{ form.mid_range }}</div>
@@ -80,29 +81,47 @@
     </div>
     <button class="btn btn-success" name="added_exercise">Add new secondary exercise</button>
 </form>
+{% if form_error %}
+<p class="bg-danger p-3">{{ form_error }}</p>
+{% endif %}
 
 {% if not exercises %}
 <p>Create some exercises to build your workout!</p>
 {% endif %}
 
+<div class="row">
 {% for musclegroup in musclegroups %}
+    <div class="col-3 p-3 m-3 overview_exercises">
     <h3>{{ musclegroup }}</h3>
     {% for exercise in exercises %}
         {% if exercise.muscle == musclegroup %}
-        <p>{{ exercise.title }}</p>
-        <p>High: {{ exercise.high_range }} | Mid: {{ exercise.mid_range }} | Low: {{ exercise.low_range }}</p>
-        <form action="{% url 'profile' %}" method="POST">
-            {% csrf_token %}
-            {{ form.title }} {{ form.muscle }}
-            <input type="hidden" name="{{ exercise.id }}">
-            <button name="modified_exercise">Modify</button>
-            <button name="deleted_exercise">Delete</button>
-        </form>
+        <div class="row px-3">
+            <hr>
+            <p><b>{{ exercise.title }}</b><br>
+            High: {% if exercise.high_range %} {{ exercise.high_range }} KG {% else %} 0 KG {% endif %} |
+            Mid: {% if exercise.mid_range %} {{ exercise.mid_range }} KG {% else %} 0 KG {% endif %} |
+            Low: {% if exercise.low_range %} {{ exercise.low_range }} {% else %} 0 KG {% endif %}</p>
+            <form action="{% url 'profile' %}" method="POST">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group col-6">{{ form.title.label_tag }} {{ form.title }}</div>
+                    <div class="form-group col-6">{{ form.muscle.label_tag}} {{ form.muscle }}</div>
+                    <input type="hidden" name="{{ exercise.id }}">
+                    <button class="btn btn-outline-light" name="modified_exercise">Mod</button>
+                </div>
+            </form>
+            <form action="{% url 'profile' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="{{ exercise.id }}">
+                <button class="btn btn-outline-light" name="deleted_exercise">Del</button>
+            </form>
+        </div> 
         {% endif %}
     {% endfor %}
+    </div>
 {% endfor %}
+</div>
 
-<p>Here is a link to the configuration</p>
 <h2>Continue your current workout!</h2>
 <h2>View all your completed mesocycles!</h2>
 <p>Including a button to create a new one!</p>
