@@ -8,15 +8,16 @@ class Exercise_Pool_Form(ModelForm):
         fields = ["title", "muscle", "high_range", "mid_range", "low_range"]
 
 
-maxvalue = MaxValue.objects.all()
-maxvalue_list = [value.exercise for value in maxvalue]
-dropdown_exercises = []
-for index, name in enumerate(maxvalue_list, 1):
-    dropdown_exercises.append((index, name))
-dropdown_exercises.insert(0, (0, "Choose your Exercise"))
 
 class CreateMaxValue(forms.Form):
-    choose_exercise = forms.ChoiceField(label="Choose an existing exercise", choices = dropdown_exercises, required=False)
-    create_exercise = forms.CharField(label="Add new Exercise", max_length=100, required=False)
-    reps = forms.DecimalField(max_digits=5, decimal_places=2)
-    weight = forms.DecimalField(max_digits=5, decimal_places=2)
+    # maxvalue = MaxValue.objects.all()
+    # maxvalue_list = [entry.exercise for entry in maxvalue]
+    # dropdown_exercises = []
+    # for exercise in maxvalue_list:
+    #     dropdown_exercises.append((exercise, exercise))
+    # dropdown_exercises.insert(0, ("choose", "Choose your Exercise"))
+
+    choose_exercise = forms.ModelChoiceField(empty_label="select", label="Choose an existing exercise", queryset=MaxValue.objects.all(), required=False)
+    create_exercise = forms.CharField(label="Add new Exercise", max_length=100, required=False) 
+    reps = forms.DecimalField(max_digits=5, decimal_places=2, min_value=1.0)
+    weight = forms.DecimalField(max_digits=5, decimal_places=2, min_value=1.0)

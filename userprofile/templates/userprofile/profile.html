@@ -1,32 +1,45 @@
 {% extends 'userprofile/base.html' %}
 {% block content %}
 
-<h1>This is your very own profile!</h1>
+<div class="container">
+
+<div class="row justify-content-center">
+    <h1>This is your very own profile!</h1>
+</div>
+
 <h2>Calculate your Max Rep</h2>
-
-
 <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item"><a class="nav-link active" id="calculate-tab" data-toggle="tab" href="#tab1" role="tab">Calculate</a></li>
-    <li class="nav-item"><a class="nav-link" id="add-new-max-tab" data-toggle="tab" href="#tab2" role="tab">Add new Max Exercise</a></li>
+    <li class="nav-item"><a class="nav-link" id="add-new-max-tab" data-toggle="tab" href="#tab2" role="tab">Add new Max Value</a></li>
 </ul>
 <div class="tab-content">
-    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+    <div class="tab-pane fade show active p-3" id="tab1" role="tabpanel">
         <form action="{% url 'profile' %}" method="POST">
             {% csrf_token %}
             <input type="number" step="0.01" placeholder="Weight", name="weight">
             <input type="number" step="0.01" placeholder="Reps", name="reps">
             <button name="calculated_maxrep">Calculate!</button>
         </form>
-        <p>{{ ergebnis }}</p>
     </div>
-    <div class="tab-pane fade" id="tab2" role="tabpanel">
+    <div class="tab-pane fade p-3" id="tab2" role="tabpanel">
         <form action="{% url 'profile' %}" method="POST">
             {% csrf_token %}
-            {{ form_maxval }}
-            <button name="calculate_and_safe">Add new Max Val Exercise!</button>
+            <div class="form-row">
+                <div class="form-group col-5">{{ form_maxval.choose_exercise.label_tag }} {{ form_maxval.choose_exercise }}</div>
+                <p class="col-1">or</p>
+                <div class="form-group col-5">{{ form_maxval.create_exercise.label_tag }} {{ form_maxval.create_exercise }}</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-6">{{ form_maxval.reps.label_tag }} {{ form_maxval.reps }}</div>
+                <div class="form-group col-6">{{ form_maxval.weight.label_tag }} {{ form_maxval.weight }}</div>
+            </div>
+            <button name="calculate_and_safe" class="btn btn-primary">Add new Max Val Exercise!</button>
         </form>
     </div>
-  </div>
+</div>
+<p>{{ error }}</p>
+<p>{{ ergebnis }}</p>
+
 
 
 <h2>View your current Max-reps</h2>
@@ -67,8 +80,8 @@
     {% endfor %}
 {% endfor %}
 
+<h2>Continue your current workout!</h2>
+<h2>View all your completed mesocycles!</h2>
 
-<h2>Here's a link to the workout section</h2>
-<p>Contains all former workout plans as well as the current one</p>
-
+</div>
 {% endblock %}

@@ -6,6 +6,7 @@ class MaxValue(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     exercise = models.CharField("Name of Exercise", max_length=100)
     max_value = models.DecimalField(max_digits=5, decimal_places=2)
+    #SHOULD BE AN INTEGER
     timestamp = models.DateTimeField()
     # blank=True makes the field optional
     # null=True allows to write NULL to the database
