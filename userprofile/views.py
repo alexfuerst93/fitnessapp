@@ -133,20 +133,23 @@ def loginuser(request):
             return redirect('profile')
 
 def configure(request):
+    configure_workout = ConfigureWorkout()
+
     if request.method == "GET":
         return render(request, "userprofile/configure.html")
-    else:
+    
+    elif "day_amount" in request.POST:
         print(request.POST)
-        configure_workout = ConfigureWorkout()
 
-        if request.POST["days"] == "3":
-            days = "You selected 3 days"
-        elif request.POST["days"] == "4":
-            days = "You selected 4 days"
-        elif request.POST["days"] == "5":
-            days = "You selected 5 days"
+        days = []
+        for day in range(int(request.POST["days"])):
+            days.append(day)
         return render(request, "userprofile/configure.html", {"days" : days, "configure_workout" : configure_workout})      
-        # get days as integer in, so you can loop  
+        # get days as integer in, so you can loop
+
+    elif "configuration_completed" in request.POST:
+        print(request.POST)
+        return render(request, "userprofile/profile.html")
 
 def workout(request):
     return render(request, "userprofile/workout.html")

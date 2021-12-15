@@ -7,10 +7,53 @@
     <input type="radio" name="days" value="3" id="3 days"><label for="3 days">3 days</label><br>
     <input type="radio" name="days" value="4" id="4 days"><label for="4 days">4 days</label><br>
     <input type="radio" name="days" value="5" id="5 days"><label for="5 days">5 days</label><br>
-    <input type="submit">
+    <input type="submit" name="day_amount">
 </form>
 
-<p>You selected {{ days }}</p>
+<p>You selected {{ days }} days.</p>
+
+<p>2. Choose your exercises</p>
+
+{% for day in days %}
+<table>
+    <thead>
+        <tr>
+            <th>Max Ex</th>
+            <th>Sec Ex</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ configure_workout.max_exercise }}</td>
+            <td>{{ configure_workout.sec_exercise }}</td>
+        </tr>
+        <tr>
+            <td>{{ configure_workout.max_exercise }}</td>
+            <td>{{ configure_workout.sec_exercise }}</td>
+        </tr>
+        <tr>
+            <td>{{ configure_workout.max_exercise }}</td>
+            <td>{{ configure_workout.sec_exercise }}</td>
+        </tr>
+        <tr>
+            <td>{{ configure_workout.max_exercise }}</td>
+            <td>{{ configure_workout.sec_exercise }}</td>
+        </tr>
+    </tbody>
+</table>
+{% endfor %}
+
+
+
+
+
+<form action="{% url 'configure' %}" method="POST">
+    {% csrf_token %}
+    {{ configure_workout }}
+    <input type="submit" name="configuration_completed">
+</form>
+<p>{{ configure_workout.non_field_errors }}</p>
+<p>{{ form.non_field_errors }}</p>
 
 
 
