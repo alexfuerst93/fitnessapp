@@ -22,5 +22,7 @@ urlpatterns = [
     path("logout/", views.logoutuser, name="logoutuser"),
     path("login/", views.loginuser, name="loginuser"),
     path('', views.startpage, name="home"),
-    path('profile/', views.profile, name="profile")
+    path('profile/', views.profile, name="profile"),
+    path('configure-next-cycle/', views.configure, name="configure"),
+    path('workout/', views.workout, name="workout")
 ]

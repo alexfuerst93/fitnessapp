@@ -1,0 +1,17 @@
+{% extends 'userprofile/base.html' %}
+{% block content %}
+
+<p>1. How many days per week do you want to workout?</p>
+<form action="{% url 'configure' %}" method="POST">
+    {% csrf_token %}
+    <input type="radio" name="days" value="3" id="3 days"><label for="3 days">3 days</label><br>
+    <input type="radio" name="days" value="4" id="4 days"><label for="4 days">4 days</label><br>
+    <input type="radio" name="days" value="5" id="5 days"><label for="5 days">5 days</label><br>
+    <input type="submit">
+</form>
+
+<p>You selected {{ days }}</p>
+
+
+
+{% endblock %}

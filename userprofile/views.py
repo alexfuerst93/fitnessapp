@@ -9,7 +9,7 @@ from django.contrib.auth import login, logout, authenticate
 
 # database tables
 from .models import MaxValue, Exercise_Pool, musclegroups
-from .forms import CreateMaxValue, Exercise_Pool_Form
+from .forms import CreateMaxValue, Exercise_Pool_Form, ConfigureWorkout
 from .helpers import epley
 
 def startpage(request):
@@ -131,3 +131,22 @@ def loginuser(request):
         else:
             login(request, user)
             return redirect('profile')
+
+def configure(request):
+    if request.method == "GET":
+        return render(request, "userprofile/configure.html")
+    else:
+        print(request.POST)
+        configure_workout = ConfigureWorkout()
+
+        if request.POST["days"] == "3":
+            days = "You selected 3 days"
+        elif request.POST["days"] == "4":
+            days = "You selected 4 days"
+        elif request.POST["days"] == "5":
+            days = "You selected 5 days"
+        return render(request, "userprofile/configure.html", {"days" : days, "configure_workout" : configure_workout})      
+        # get days as integer in, so you can loop  
+
+def workout(request):
+    return render(request, "userprofile/workout.html")

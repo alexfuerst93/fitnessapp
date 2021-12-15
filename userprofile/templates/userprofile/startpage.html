@@ -5,7 +5,7 @@
 <div class="container">
 <div class="row justify-content-center">
     <h1>Easily configure your Fitness-App based on "Beyond bigger leaner stronger"!</h1>
-    <a href="{% url 'profile' %}">Visit your profile</a>
+    <a href="{% url 'profile' %}" class="btn btn-primary">Visit your profile</a>
 
     <form action="" method="post">
         {% csrf_token %}
@@ -18,6 +18,8 @@
     <img src="{% static '/userprofile/images/beach.jpg' %}" alt="beach">
 </div>
 </div>
+
+<p>Hier gehört noch ein erklärender Text, was Beyond Bigger Leaner Stronger eigentlich tut</p>
 
 
 {% endblock %}

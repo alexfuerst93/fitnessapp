@@ -2,11 +2,14 @@
 {% block content %}
 
 <div class="container">
-
-<div class="row justify-content-center">
-    <h1>This is your very own profile!</h1>
-</div>
-
+    
+    <div class="row justify-content-center">
+        <h1>This is your very own profile!</h1>
+    </div>
+<br>
+    
+<h2>Continue your current workout!</h2>
+    
 <br>
 <h2>Calculate your Max Rep</h2>
 <ul class="nav nav-tabs" role="tablist">
@@ -95,35 +98,37 @@
     <h3>{{ musclegroup }}</h3>
     {% for exercise in exercises %}
         {% if exercise.muscle == musclegroup %}
+        <hr>
         <div class="row px-3">
-            <hr>
-            <p><b>{{ exercise.title }}</b><br>
+            <div class="col"><b>{{ exercise.title }}</b><br>
             High: {% if exercise.high_range %} {{ exercise.high_range }} KG {% else %} 0 KG {% endif %} |
             Mid: {% if exercise.mid_range %} {{ exercise.mid_range }} KG {% else %} 0 KG {% endif %} |
-            Low: {% if exercise.low_range %} {{ exercise.low_range }} {% else %} 0 KG {% endif %}</p>
+            Low: {% if exercise.low_range %} {{ exercise.low_range }} {% else %} 0 KG {% endif %}</div>
             <form action="{% url 'profile' %}" method="POST">
                 {% csrf_token %}
                 <div class="form-row">
-                    <div class="form-group col-6">{{ form.title.label_tag }} {{ form.title }}</div>
-                    <div class="form-group col-6">{{ form.muscle.label_tag}} {{ form.muscle }}</div>
+                    <div class="form-group col-xs-6">{{ form.title.label_tag }} {{ form.title }}</div>
+                    <div class="form-group col-xs-6">{{ form.muscle.label_tag}} {{ form.muscle }}</div>
                     <input type="hidden" name="{{ exercise.id }}">
-                    <button class="btn btn-outline-light" name="modified_exercise">Mod</button>
                 </div>
-            </form>
-            <form action="{% url 'profile' %}" method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="{{ exercise.id }}">
-                <button class="btn btn-outline-light" name="deleted_exercise">Del</button>
-            </form>
         </div> 
+            <div class="row px-3 justify-content-between">
+                <button class="btn btn-outline-light col-3" name="modified_exercise">Mod</button>
+                </form>
+                <form action="{% url 'profile' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="{{ exercise.id }}">
+                    <button class="btn btn-outline-light col" name="deleted_exercise">Del</button>
+                </form>
+            </div>
         {% endif %}
     {% endfor %}
     </div>
 {% endfor %}
 </div>
 
-<h2>Continue your current workout!</h2>
 <h2>View all your completed mesocycles!</h2>
+<a href="{% url 'configure' %}" class="btn btn-primary">Configure you next mesocycle!</a>
 <p>Including a button to create a new one!</p>
 
 </div>
