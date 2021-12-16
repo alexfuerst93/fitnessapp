@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect
 from django.utils import timezone
 
@@ -133,23 +134,27 @@ def loginuser(request):
             return redirect('profile')
 
 def configure(request):
-    configure_workout = ConfigureWorkout()
 
     if request.method == "GET":
         return render(request, "userprofile/configure.html")
     
     elif "day_amount" in request.POST:
-        print(request.POST)
-
+        configure_workout = ConfigureWorkout()
         days = []
         for day in range(int(request.POST["days"])):
             days.append(day)
         return render(request, "userprofile/configure.html", {"days" : days, "configure_workout" : configure_workout})      
-        # get days as integer in, so you can loop
 
     elif "configuration_completed" in request.POST:
         print(request.POST)
-        return render(request, "userprofile/profile.html")
+        try:
+            configure_workout = ConfigureWorkout(request.POST) # pass in the form choices of the user
+            configure_workout.is_valid() # only after checking for validity, cleaned_data is set in the form 
+            configure_workout.clean() # throws a ValidationError based on my custom rules
+            return render(request, "userprofile/profile.html")
+        except ValidationError:
+            return render(request, "userprofile/configure.html", {"configure_workout" : configure_workout})
+            
 
 def workout(request):
     return render(request, "userprofile/workout.html")

@@ -20,11 +20,14 @@ class ConfigureWorkout(forms.Form):
     # check if ALL exercises are displayed or just the ones created by this specific user
 
     def clean(self):
-        max_exercise = self.cleaned_data.get("max_exercise")
-        sec_exercise = self.cleaned_data.get("sec_exercise")
+        cleaned_data = super().clean()
+        max_exercise = cleaned_data.get("max_exercise")
+        sec_exercise = cleaned_data.get("sec_exercise")
 
         if max_exercise and sec_exercise:
             raise forms.ValidationError("Enter either a Max Exercise or a Secondary Exercise.")
 
         else:
-            return self.cleaned_data
+            return cleaned_data
+
+# doc: https://docs.djangoproject.com/en/3.2/ref/forms/validation/#cleaning-and-validating-fields-that-depend-on-each-other
