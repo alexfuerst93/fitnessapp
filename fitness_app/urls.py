@@ -15,14 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from userprofile import views
+from userprofile import views, models
 
 urlpatterns = [
     path('admin/', admin.site.urls), #afuerst / 0000
+    path('', views.startpage, name="home"),
+
     path("logout/", views.logoutuser, name="logoutuser"),
     path("login/", views.loginuser, name="loginuser"),
-    path('', views.startpage, name="home"),
+
     path('profile/', views.profile, name="profile"),
     path('configure-next-cycle/', views.configure, name="configure"),
-    path('workout/', views.workout, name="workout")
+    path('workout/<str:cycle_name>', views.workout, name="workout")
 ]

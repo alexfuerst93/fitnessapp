@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.validators import MinValueValidator
+from django.forms.fields import DecimalField
 
 class MaxValue(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -40,12 +41,15 @@ class Exercise_Pool(models.Model):
         return self.title
 
 class WorkoutPlan(models.Model):
-    # sole purpose of this model is to only read from the other 2 tables and structure results in mesocycles
+    # sole purpose of this model is to read from the other 2 tables and structure results in mesocycles
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    cycle_name = models.CharField
+    cycle_name = models.CharField(max_length=50)
     week = models.IntegerField()
     day = models.IntegerField()
-    exercise_1 = models.ForeignKey(MaxValue, on_delete=models.CASCADE)
-    exercise_2 = models.ForeignKey(Exercise_Pool, on_delete=models.CASCADE)
-    timestamp = 
-    # should the achieved reps from the user be saved in here?
+    exercise_1 = models.CharField(max_length=100)
+    exercise_1_weight = models.DecimalField(max_digits=5, decimal_places=2)
+    timestamp = models.DateTimeField()
+    # should the achieved reps from the user be saved in here? --> YES
+
+    def __str__(self):
+        return self.cycle_name

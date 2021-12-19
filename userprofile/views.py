@@ -1,5 +1,5 @@
 from django.core.exceptions import ValidationError
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
 
 #user creation
@@ -33,6 +33,7 @@ def profile(request):
     #databases
     max_vals = MaxValue.objects.filter(user_id=request.user)
     exercises = Exercise_Pool.objects.filter(user_id=request.user)
+    workout = WorkoutPlan.objects.filter(user_id=request.user)
     #form
     add_exercise = Exercise_Pool_Form()
     form_maxval = CreateMaxValue()
@@ -40,10 +41,14 @@ def profile(request):
     sorted_musclegroups = [musclegroup[0] for musclegroup in musclegroups]
     sorted_musclegroups.sort()
 
+    # retrieve unique values of all current cycles
+    cycles = list(set([cycle.cycle_name for cycle in workout]))
+
     render_dict = {
         "maxvals" : max_vals, "exercises" : exercises,
         "form_maxval" : form_maxval, "form" : add_exercise, 
-        "musclegroups" : sorted_musclegroups
+        "musclegroups" : sorted_musclegroups,
+        "cycles" : cycles
         }
 
     if request.method == "GET":
@@ -153,8 +158,8 @@ def configure(request):
 
     elif "configuration_completed" in request.POST:
         days = int(request.POST["days"])
-        print(request.POST)
-        # retrieve all the selected exercises from the post data
+        # print(request.POST)
+        # retrieve all the selected exercises from the post data. values are stored in a list, each index = 1 day
         first_max_exercise = request.POST.getlist("first_max_exercise")
         first_sec_exercise = request.POST.getlist("first_sec_exercise")
         second_max_exercise = request.POST.getlist("second_max_exercise")
@@ -182,23 +187,25 @@ def configure(request):
         else:
             #exercises = Exercise_Pool.objects.filter(user_id=request.user)
             #max_vals = MaxValue.objects.filter(user_id=request.user)
-            exercise_1 = MaxValue.objects.filter(pk = first_max_exercise[0])
+            cycle_name = "cycle1" #check if for pre-existing cycles and increment
             timestamp = timezone.now()
+
+            exercise_1 = MaxValue.objects.get(pk = first_max_exercise[0])
             workout = WorkoutPlan(
-                user_id=request.user,
-                cycle_name = 1, #needs a check of all previous cycles
+                user_id = request.user,
+                cycle_name = cycle_name, #needs a check of all previous cycles
                 week = 1, # needs a for loop through all 16 weeks
                 day = 1, # needs a for loop through all possible days (48/64/80)
                 exercise_1 = exercise_1.exercise, #needs a conditional to check either max or sec exercise
-                exercise_1_weight = exercise_1.max_value,
-                exercise_1_reps = 4,
-                exercise_1_sets = 4,
+                exercise_1_weight = float(exercise_1.max_value)*0.70,
                 timestamp = timestamp
                 )
             workout.save()
-            return render(request, "userprofile/workout.html") #dynamic URL
+
+            return redirect("profile")
             # learn the database: https://docs.djangoproject.com/en/4.0/topics/db/queries/#creating-objects
             # stackoverflow: https://stackoverflow.com/questions/26672077/django-model-vs-model-objects-create
 
-def workout(request):
-    return render(request, "userprofile/workout.html")
+def workout(request, cycle_name):
+    cycle = get_object_or_404(WorkoutPlan, cycle_name=cycle_name, user_id=request.user) #filter the model based on URL snippet
+    return render(request, "userprofile/workout.html", {"cycle" : cycle})
