@@ -47,3 +47,5 @@ class Exercise_Pool(models.Model):
 #     exercise_1 = models.ForeignKey(MaxValue, on_delete=models.CASCADE)
 #     exercise_2 = models.ForeignKey(Exercise_Pool, on_delete=models.CASCADE)
 #     # or should the achieved reps from the user be saved in here?
+
+## is this table even necessary??

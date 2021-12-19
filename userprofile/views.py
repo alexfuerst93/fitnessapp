@@ -139,21 +139,45 @@ def configure(request):
         return render(request, "userprofile/configure.html")
     
     elif "day_amount" in request.POST:
-        configure_workout = ConfigureWorkout()
+        configure_workout_day1 = ConfigureWorkout()
+        configure_workout_day2 = ConfigureWorkout()
+        # configure_workout_day3 = ConfigureWorkout()
+
         days = []
         for day in range(int(request.POST["days"])):
             days.append(day)
-        return render(request, "userprofile/configure.html", {"days" : days, "configure_workout" : configure_workout})      
+        return render(request, "userprofile/configure.html", {"days" : days, 
+        "configure_workout_day1" : configure_workout_day1,
+        "configure_workout_day2" : configure_workout_day2,
+        #"configure_workout_day3" : configure_workout_day3
+        })      
 
     elif "configuration_completed" in request.POST:
         print(request.POST)
         try:
-            configure_workout = ConfigureWorkout(request.POST) # pass in the form choices of the user
-            configure_workout.is_valid() # only after checking for validity, cleaned_data is set in the form 
-            configure_workout.clean() # throws a ValidationError based on my custom rules
+            configure_workout_day1 = ConfigureWorkout(request.POST)
+            configure_workout_day1.is_valid()
+            print(configure_workout_day1.errros.as_data())
+            # print(configure_workout_day1.cleaned_data)
+            configure_workout_day1.clean()
+            # configure_workout_day1 = ConfigureWorkout(request.POST, prefix="day1") # pass in the form choices of the user
+            # configure_workout_day2 = ConfigureWorkout(request.POST, prefix="day2")
+            # configure_workout_day3 = ConfigureWorkout(request.POST, prefix="day3")
+
+            # configure_workout_day1.is_valid() # only after checking for validity, cleaned_data is set in the form 
+            # configure_workout_day2.is_valid()
+            # configure_workout_day3.is_valid()
+
+            # configure_workout_day1.clean() # throws a ValidationError based on my custom rules
+            # configure_workout_day1.clean()
+            # configure_workout_day3.clean()
             return render(request, "userprofile/profile.html")
         except ValidationError:
-            return render(request, "userprofile/configure.html", {"configure_workout" : configure_workout})
+            return render(request, "userprofile/configure.html", {
+                "configure_workout_day1" : configure_workout_day1,
+                "configure_workout_day2" : configure_workout_day2,
+                #"configure_workout_day3" : configure_workout_day3
+                })
             
 
 def workout(request):

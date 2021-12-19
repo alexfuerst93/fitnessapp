@@ -15,19 +15,25 @@ class CreateMaxValue(forms.Form):
     weight = forms.DecimalField(max_digits=5, decimal_places=2, min_value=1.0)
 
 class ConfigureWorkout(forms.Form):
-    max_exercise = forms.ModelChoiceField(empty_label="select", label="Choose Max Exercise", queryset=MaxValue.objects.all(), required=False) 
-    sec_exercise = forms.ModelChoiceField(empty_label="select", label="Choose Sec Exercise", queryset=Exercise_Pool.objects.all(), required=False)
+    first_max_exercise = forms.ModelChoiceField(empty_label="select", queryset=MaxValue.objects.all(), required=False) 
+    first_sec_exercise = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.all(), required=False)
     # check if ALL exercises are displayed or just the ones created by this specific user
+    second_max_exercise = forms.ModelChoiceField(empty_label="select", queryset=MaxValue.objects.all(), required=False) 
+    second_sec_exercise = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.all(), required=False)
+    third_max_exercise = forms.ModelChoiceField(empty_label="select", queryset=MaxValue.objects.all(), required=False) 
+    third_sec_exercise = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.all(), required=False)
+    fourth_max_exercise = forms.ModelChoiceField(empty_label="select", queryset=MaxValue.objects.all(), required=False) 
+    fourth_sec_exercise = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.all(), required=False)
 
     def clean(self):
         cleaned_data = super().clean()
-        max_exercise = cleaned_data.get("max_exercise")
-        sec_exercise = cleaned_data.get("sec_exercise")
+        first_max_exercise = cleaned_data.get("first_max_exercise")
+        first_sec_exercise = cleaned_data.get("first_sec_exercise")
 
-        if max_exercise and sec_exercise:
+        if first_max_exercise and first_sec_exercise:
             raise forms.ValidationError("Enter either a Max Exercise or a Secondary Exercise.")
 
         else:
+            # print("------------ Here is my cleand data --------------")
+            # print(cleaned_data)
             return cleaned_data
-
-# doc: https://docs.djangoproject.com/en/3.2/ref/forms/validation/#cleaning-and-validating-fields-that-depend-on-each-other
