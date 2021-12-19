@@ -25,15 +25,13 @@ class ConfigureWorkout(forms.Form):
     fourth_max_exercise = forms.ModelChoiceField(empty_label="select", queryset=MaxValue.objects.all(), required=False) 
     fourth_sec_exercise = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.all(), required=False)
 
-    def clean(self):
-        cleaned_data = super().clean()
-        first_max_exercise = cleaned_data.get("first_max_exercise")
-        first_sec_exercise = cleaned_data.get("first_sec_exercise")
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     first_max_exercise = cleaned_data.get("first_max_exercise")
+    #     first_sec_exercise = cleaned_data.get("first_sec_exercise")
 
-        if first_max_exercise and first_sec_exercise:
-            raise forms.ValidationError("Enter either a Max Exercise or a Secondary Exercise.")
+    #     if first_max_exercise and first_sec_exercise:   
+    #         raise forms.ValidationError("Enter either a Max Exercise or a Secondary Exercise.")
 
-        else:
-            # print("------------ Here is my cleand data --------------")
-            # print(cleaned_data)
-            return cleaned_data
+    #     else:
+    #         return cleaned_data

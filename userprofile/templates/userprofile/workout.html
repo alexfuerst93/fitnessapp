@@ -3,4 +3,9 @@
 
 <h1>Your current Mesocycle:</h1>
 
+<form action="{% url 'workout' %}" method="POST">
+{% csrf_token %}
+
+</form>
+
 {% endblock %}

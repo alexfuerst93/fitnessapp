@@ -29,23 +29,23 @@ class Exercise_Pool(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField("Name of Exercise", max_length=100)
     muscle = models.CharField("Name of Musclegroup", max_length=50, choices=musclegroups, default="chest")
-    high_range = models.PositiveIntegerField(blank=True, null=True, validators=[MinValueValidator(1)])
+    high_range = models.PositiveIntegerField(blank=True, null=True, validators=[MinValueValidator(1)]) #weight
     # high_range_reps = 
     # add reps for every range (4 sets)
     # add default = 0 for ranges and reps
-    mid_range = models.PositiveIntegerField(blank=True, null=True, validators=[MinValueValidator(1)])
-    low_range = models.PositiveIntegerField(blank=True, null=True, validators=[MinValueValidator(1)])
+    mid_range = models.PositiveIntegerField(blank=True, null=True, validators=[MinValueValidator(1)]) #weight
+    low_range = models.PositiveIntegerField(blank=True, null=True, validators=[MinValueValidator(1)]) #weight
     
     def __str__(self):
         return self.title
 
-# class workout_plan(models.Model):
-#     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-#     cycle = models.IntegerField()
-#     week = models.IntegerField()
-#     day = models.IntegerField()
-#     exercise_1 = models.ForeignKey(MaxValue, on_delete=models.CASCADE)
-#     exercise_2 = models.ForeignKey(Exercise_Pool, on_delete=models.CASCADE)
-#     # or should the achieved reps from the user be saved in here?
-
-## is this table even necessary??
+class WorkoutPlan(models.Model):
+    # sole purpose of this model is to only read from the other 2 tables and structure results in mesocycles
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    cycle_name = models.CharField
+    week = models.IntegerField()
+    day = models.IntegerField()
+    exercise_1 = models.ForeignKey(MaxValue, on_delete=models.CASCADE)
+    exercise_2 = models.ForeignKey(Exercise_Pool, on_delete=models.CASCADE)
+    timestamp = 
+    # should the achieved reps from the user be saved in here?

@@ -15,6 +15,7 @@
 <p>2. Choose your exercises</p>
 
 <div class="row justify-content-center">
+<p>{{ error }}</p>
 <form action="{% url 'configure' %}" method="POST">
 {% csrf_token %}
 <table>
@@ -41,6 +42,7 @@
             <td>{{ configure_workout_day2.first_sec_exercise }}</td>
             <td>{{ configure_workout_day3.first_max_exercise }}</td>
             <td>{{ configure_workout_day3.first_sec_exercise }}</td>
+            <!-- Decide how many sets per exercise? -->
         </tr>
         <tr>
             <td>{{ configure_workout_day1.second_max_exercise }}</td>
@@ -68,7 +70,8 @@
         </tr>
     </tbody>
 </table>
-<input type="submit" class="btn btn-primary" name="configuration_completed">
+<input type="hidden" name="days" value="{{ days }}"> 
+<input type="submit" class="btn btn-primary" name="configuration_completed" value="Create my next cycle!">
 
 </form>
 </div>

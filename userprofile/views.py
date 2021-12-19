@@ -9,7 +9,7 @@ from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
 
 # database tables
-from .models import MaxValue, Exercise_Pool, musclegroups
+from .models import MaxValue, Exercise_Pool, musclegroups, WorkoutPlan
 from .forms import CreateMaxValue, Exercise_Pool_Form, ConfigureWorkout
 from .helpers import epley
 
@@ -141,44 +141,64 @@ def configure(request):
     elif "day_amount" in request.POST:
         configure_workout_day1 = ConfigureWorkout()
         configure_workout_day2 = ConfigureWorkout()
-        # configure_workout_day3 = ConfigureWorkout()
+        configure_workout_day3 = ConfigureWorkout()
+        days = int(request.POST["days"])
 
-        days = []
-        for day in range(int(request.POST["days"])):
-            days.append(day)
-        return render(request, "userprofile/configure.html", {"days" : days, 
-        "configure_workout_day1" : configure_workout_day1,
-        "configure_workout_day2" : configure_workout_day2,
-        #"configure_workout_day3" : configure_workout_day3
+        return render(request, "userprofile/configure.html", {
+            "days" : days, 
+            "configure_workout_day1" : configure_workout_day1,
+            "configure_workout_day2" : configure_workout_day2,
+            "configure_workout_day3" : configure_workout_day3
         })      
 
     elif "configuration_completed" in request.POST:
+        days = int(request.POST["days"])
         print(request.POST)
-        try:
-            configure_workout_day1 = ConfigureWorkout(request.POST)
-            configure_workout_day1.is_valid()
-            print(configure_workout_day1.errros.as_data())
-            # print(configure_workout_day1.cleaned_data)
-            configure_workout_day1.clean()
-            # configure_workout_day1 = ConfigureWorkout(request.POST, prefix="day1") # pass in the form choices of the user
-            # configure_workout_day2 = ConfigureWorkout(request.POST, prefix="day2")
-            # configure_workout_day3 = ConfigureWorkout(request.POST, prefix="day3")
+        # retrieve all the selected exercises from the post data
+        first_max_exercise = request.POST.getlist("first_max_exercise")
+        first_sec_exercise = request.POST.getlist("first_sec_exercise")
+        second_max_exercise = request.POST.getlist("second_max_exercise")
+        second_sec_exercise = request.POST.getlist("second_sec_exercise")
+        third_max_exercise = request.POST.getlist("third_max_exercise")
+        third_sec_exercise = request.POST.getlist("third_sec_exercise")
+        fourth_max_exercise = request.POST.getlist("fourth_max_exercise")
+        fourth_sec_exercise = request.POST.getlist("fourth_sec_exercise")
 
-            # configure_workout_day1.is_valid() # only after checking for validity, cleaned_data is set in the form 
-            # configure_workout_day2.is_valid()
-            # configure_workout_day3.is_valid()
-
-            # configure_workout_day1.clean() # throws a ValidationError based on my custom rules
-            # configure_workout_day1.clean()
-            # configure_workout_day3.clean()
-            return render(request, "userprofile/profile.html")
-        except ValidationError:
+        # make form validations to ensure the user decided everytime between max and sec exercise
+        if first_max_exercise[0] and first_sec_exercise[0]:
+            error = "Select either a max exercise or a secondary exercise per day per row."
+            configure_workout_day1 = ConfigureWorkout()
+            configure_workout_day2 = ConfigureWorkout()
+            configure_workout_day3 = ConfigureWorkout()
             return render(request, "userprofile/configure.html", {
+                "error" : error,
+                "days" : days, 
                 "configure_workout_day1" : configure_workout_day1,
                 "configure_workout_day2" : configure_workout_day2,
-                #"configure_workout_day3" : configure_workout_day3
-                })
-            
+                "configure_workout_day3" : configure_workout_day3
+            })
+
+        # all configurations passed! Now build up the complete workout and send the user to it.
+        else:
+            #exercises = Exercise_Pool.objects.filter(user_id=request.user)
+            #max_vals = MaxValue.objects.filter(user_id=request.user)
+            exercise_1 = MaxValue.objects.filter(pk = first_max_exercise[0])
+            timestamp = timezone.now()
+            workout = WorkoutPlan(
+                user_id=request.user,
+                cycle_name = 1, #needs a check of all previous cycles
+                week = 1, # needs a for loop through all 16 weeks
+                day = 1, # needs a for loop through all possible days (48/64/80)
+                exercise_1 = exercise_1.exercise, #needs a conditional to check either max or sec exercise
+                exercise_1_weight = exercise_1.max_value,
+                exercise_1_reps = 4,
+                exercise_1_sets = 4,
+                timestamp = timestamp
+                )
+            workout.save()
+            return render(request, "userprofile/workout.html") #dynamic URL
+            # learn the database: https://docs.djangoproject.com/en/4.0/topics/db/queries/#creating-objects
+            # stackoverflow: https://stackoverflow.com/questions/26672077/django-model-vs-model-objects-create
 
 def workout(request):
     return render(request, "userprofile/workout.html")
