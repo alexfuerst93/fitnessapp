@@ -3,11 +3,57 @@
 
 <h1>Your current Mesocycle:</h1>
 
-<form action="{% url 'workout' cycle %}" method="POST">
-{% csrf_token %}
+
 {% for entry in workout %}
-{{ entry.exercise_1 }}
+<div class="container">
+<div class="row justify-content-center">
+    <form action="{% url 'workout' cycle %}" method="POST">
+    {% csrf_token %}
+    <table>
+        <thead>
+            <tr>
+                <th colspan="3">Week XY</th>
+            </tr>
+            <tr>
+                <th>Day {{ entry.day_count }}</th>
+                <th>Current % Max Value</th>
+                <th>High / mid / low</th>
+            </tr>
+            <tr>
+                <th>Exercise</th>
+                <th>Weight</th>
+                <th>Reps per Set</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ entry.exercise_1 }}</td>
+                <td>{{ entry.exercise_1_weight }}</td>
+                <td>Some User Input</td>
+            </tr>
+            <tr>
+                <td>{{ entry.exercise_2 }}</td>
+                <td>{{ entry.exercise_2_weight }}</td>
+                <td>Some User Input</td>
+            </tr>
+            <tr>
+                <td>{{ entry.exercise_3 }}</td>
+                <td>{{ entry.exercise_3_weight }}</td>
+                <td>Some User Input</td>
+            </tr>
+            <tr>
+                <td>{{ entry.exercise_4 }}</td>
+                <td>{{ entry.exercise_4_weight }}</td>
+                <td>Some User Input</td>
+            </tr>
+        </tbody>
+    </table>
+    <input type="submit" class="btn btn-primary" name="daily_workout_done" value="Day {{ entry.day_count }} completed">
+    </form>
+</div>
+</div>
 {% endfor %}
-</form>
+
+
 
 {% endblock %}

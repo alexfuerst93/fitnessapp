@@ -241,10 +241,12 @@ def configure(request):
                 workout.save()
                 day_count += 1
 
+            # better: direct the user to his newly created workout!
             return redirect("profile")
 
 def workout(request, cycle):
     #exercises = Exercise_Pool.objects.filter(user_id=request.user)
     #max_vals = MaxValue.objects.filter(user_id=request.user)
     workout = get_list_or_404(WorkoutPlan, cycle_name=cycle, user_id=request.user) #filter the model based on URL snippet
+    # days = list(set([entry.day_count for entry in workout]))
     return render(request, "userprofile/workout.html", {"workout" : workout, "cycle" : cycle})
