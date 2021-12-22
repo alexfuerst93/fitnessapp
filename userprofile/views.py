@@ -161,18 +161,24 @@ def configure(request):
 
     elif "configuration_completed" in request.POST:
         days = int(request.POST["days"])
+        print(request.POST)
 
-        # retrieve all the selected exercises from the post data. values are stored in a list, each index = 1 day
+        # retrieve all the selected exercises and sets from the post data. values are stored in a list, each index = 1 day
         first_max_exercise = request.POST.getlist("first_max_exercise")
         first_sec_exercise = request.POST.getlist("first_sec_exercise")
+        # first_sets = request.POST.getliste("first_sets")
         second_max_exercise = request.POST.getlist("second_max_exercise")
         second_sec_exercise = request.POST.getlist("second_sec_exercise")
+        # second_sets = request.POST.getliste("second_sets")
         third_max_exercise = request.POST.getlist("third_max_exercise")
         third_sec_exercise = request.POST.getlist("third_sec_exercise")
+        # third_sets = request.POST.getliste("third_sets")
         fourth_max_exercise = request.POST.getlist("fourth_max_exercise")
         fourth_sec_exercise = request.POST.getlist("fourth_sec_exercise")
+        # fourth_sets = request.POST.getliste("fourth_sets")
 
         # make form validations to ensure the user decided everytime between max and sec exercise
+        # selected sets are never none
         if first_max_exercise[0] and first_sec_exercise[0]:
             error = "Select either a max exercise or a secondary exercise per day per row."
             configure_workout_day1 = ConfigureWorkout()
@@ -250,3 +256,7 @@ def workout(request, cycle):
     workout = get_list_or_404(WorkoutPlan, cycle_name=cycle, user_id=request.user) #filter the model based on URL snippet
     # days = list(set([entry.day_count for entry in workout]))
     return render(request, "userprofile/workout.html", {"workout" : workout, "cycle" : cycle})
+
+def contact(request):
+    return render(request, "userprofile/contact.html")
+

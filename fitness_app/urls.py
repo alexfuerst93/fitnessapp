@@ -20,6 +20,7 @@ from userprofile import views, models
 urlpatterns = [
     path('admin/', admin.site.urls), #afuerst / 0000
     path('', views.startpage, name="home"),
+    path('contactme/', views.contact, name="contact"),
 
     path("logout/", views.logoutuser, name="logoutuser"),
     path("login/", views.loginuser, name="loginuser"),

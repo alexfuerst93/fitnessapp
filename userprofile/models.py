@@ -7,6 +7,9 @@ class MaxValue(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     exercise = models.CharField("Name of Exercise", max_length=100)
     max_value = models.DecimalField(max_digits=5, decimal_places=2)
+    # set_1 =
+    # set_2 = 
+    # ...
     #SHOULD BE AN INTEGER
     timestamp = models.DateTimeField()
     # blank=True makes the field optional
@@ -31,6 +34,8 @@ class Exercise_Pool(models.Model):
     title = models.CharField("Name of Exercise", max_length=100)
     muscle = models.CharField("Name of Musclegroup", max_length=50, choices=musclegroups, default="chest")
     high_range = models.PositiveIntegerField(blank=True, null=True, validators=[MinValueValidator(1)]) #weight
+    # high_range_set_1 = 
+    # ...
     # high_range_reps = 
     # add reps for every range (4 sets)
     # add default = 0 for ranges and reps
@@ -40,6 +45,17 @@ class Exercise_Pool(models.Model):
     def __str__(self):
         return self.title
 
+# class Reps(models.Model):
+#     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+#     max_exercise = models.ForeignKey(MaxValue, on_delete=models.CASCADE)
+#     sec_exercise = models.ForeignKey(Exercise_Pool, on_delete=models.CASCADE)
+#     set_1 = models.IntegerField()
+#     set_2 = models.IntegerField()
+#     set_3 = models.IntegerField()
+#     set_4 = models.IntegerField()
+#     set_5 = models.IntegerField()
+#     set_6 = models.IntegerField()
+
 class WorkoutPlan(models.Model):
     # sole purpose of this model is to read from the other 2 tables and structure results in mesocycles
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -48,6 +64,11 @@ class WorkoutPlan(models.Model):
     day_count = models.IntegerField()
     exercise_1 = models.CharField(max_length=100)
     exercise_1_weight = models.DecimalField(max_digits=5, decimal_places=2)
+    # exercise_1_set = models.CharField(max_length=10)
+
+    # pass primary key in there!
+    # set = models.ForeignKey(Exercise_Pool, on_delete=models.CASCADE)
+
     exercise_2 = models.CharField(max_length=100)
     exercise_2_weight = models.DecimalField(max_digits=5, decimal_places=2)
     exercise_3 = models.CharField(max_length=100)

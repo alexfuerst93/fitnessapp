@@ -15,15 +15,22 @@ class CreateMaxValue(forms.Form):
     weight = forms.DecimalField(max_digits=5, decimal_places=2, min_value=1.0)
 
 class ConfigureWorkout(forms.Form):
+    sets = [("II", "2 Sets"), ("III", "3 Sets"), ("IIII", "4 Sets"), ("IIIII", "5 Sets"), ("IIIIII", "6 Sets")]
+
+    # check if ALL exercises are displayed or just the ones created by this specific user
     first_max_exercise = forms.ModelChoiceField(empty_label="select", queryset=MaxValue.objects.all(), required=False) 
     first_sec_exercise = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.all(), required=False)
-    # check if ALL exercises are displayed or just the ones created by this specific user
+    first_sets = forms.ChoiceField(label="How many sets?", choices=sets, initial="IIII")
     second_max_exercise = forms.ModelChoiceField(empty_label="select", queryset=MaxValue.objects.all(), required=False) 
     second_sec_exercise = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.all(), required=False)
+    second_sets = forms.ChoiceField(label="How many sets?", choices=sets, initial="IIII")
     third_max_exercise = forms.ModelChoiceField(empty_label="select", queryset=MaxValue.objects.all(), required=False) 
     third_sec_exercise = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.all(), required=False)
+    third_sets = forms.ChoiceField(label="How many sets?", choices=sets, initial="IIII")
     fourth_max_exercise = forms.ModelChoiceField(empty_label="select", queryset=MaxValue.objects.all(), required=False) 
     fourth_sec_exercise = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.all(), required=False)
+    fourth_sets = forms.ChoiceField(label="How many sets?", choices=sets, initial="IIII")
+
 
     # def clean(self):
     #     cleaned_data = super().clean()
