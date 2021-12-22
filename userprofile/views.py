@@ -1,5 +1,5 @@
 from django.core.exceptions import ValidationError
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, get_list_or_404, render, redirect
 from django.utils import timezone
 
 #user creation
@@ -42,6 +42,7 @@ def profile(request):
     sorted_musclegroups.sort()
 
     # retrieve unique values of all current cycles
+    ### timestamp is missing ###
     cycles = list(set([cycle.cycle_name for cycle in workout]))
 
     render_dict = {
@@ -187,7 +188,7 @@ def configure(request):
         else:
             #exercises = Exercise_Pool.objects.filter(user_id=request.user)
             #max_vals = MaxValue.objects.filter(user_id=request.user)
-            cycle_name = "cycle1" #check if for pre-existing cycles and increment
+            cycle_name = "cycle2" #check if for pre-existing cycles and increment
             timestamp = timezone.now()
 
             exercise_1 = MaxValue.objects.get(pk = first_max_exercise[0])
@@ -206,6 +207,6 @@ def configure(request):
             # learn the database: https://docs.djangoproject.com/en/4.0/topics/db/queries/#creating-objects
             # stackoverflow: https://stackoverflow.com/questions/26672077/django-model-vs-model-objects-create
 
-def workout(request, cycle_name):
-    cycle = get_object_or_404(WorkoutPlan, cycle_name=cycle_name, user_id=request.user) #filter the model based on URL snippet
-    return render(request, "userprofile/workout.html", {"cycle" : cycle})
+def workout(request, cycle):
+    workout = get_list_or_404(WorkoutPlan, cycle_name=cycle, user_id=request.user) #filter the model based on URL snippet
+    return render(request, "userprofile/workout.html", {"workout" : workout, "cycle" : cycle})

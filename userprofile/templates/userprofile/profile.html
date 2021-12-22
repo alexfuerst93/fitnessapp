@@ -9,6 +9,7 @@
 <br>
     
 <h2>Continue your current workout!</h2>
+<!-- The one with the highest increment on cycle_name? -->
     
 <br>
 <h2>Calculate your Max Rep</h2>
@@ -131,7 +132,7 @@
 <a href="{% url 'configure' %}" class="btn btn-primary">Configure you next mesocycle!</a>
 
 {% for cycle in cycles %}
-<a href="{% url 'workout' cycle %}" class="btn btn-success">Last Cycle</a>
+<a href="{% url 'workout' cycle %}" class="btn btn-success">{{ cycle }}</a>
 {% endfor %}
 
 </div>
