@@ -44,12 +44,18 @@ class WorkoutPlan(models.Model):
     # sole purpose of this model is to read from the other 2 tables and structure results in mesocycles
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     cycle_name = models.CharField(max_length=50)
-    week = models.IntegerField()
-    day = models.IntegerField()
+    week_count = models.IntegerField()
+    day_count = models.IntegerField()
     exercise_1 = models.CharField(max_length=100)
     exercise_1_weight = models.DecimalField(max_digits=5, decimal_places=2)
-    timestamp = models.DateTimeField()
-    # should the achieved reps from the user be saved in here? --> YES
+    exercise_2 = models.CharField(max_length=100)
+    exercise_2_weight = models.DecimalField(max_digits=5, decimal_places=2)
+    exercise_3 = models.CharField(max_length=100)
+    exercise_3_weight = models.DecimalField(max_digits=5, decimal_places=2)
+    exercise_4 = models.CharField(max_length=100)
+    exercise_4_weight = models.DecimalField(max_digits=5, decimal_places=2)
+    timestamp = models.DateField()
+    # should the achieved reps from the user be saved in here? --> NO / should be read from the 2 original models
 
     def __str__(self):
         return self.cycle_name

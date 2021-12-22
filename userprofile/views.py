@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404, get_list_or_404, render, redirect
 from django.utils import timezone
+from datetime import date
 
 #user creation
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -139,8 +140,9 @@ def loginuser(request):
             login(request, user)
             return redirect('profile')
 
-def configure(request):
 
+
+def configure(request):
     if request.method == "GET":
         return render(request, "userprofile/configure.html")
     
@@ -159,7 +161,7 @@ def configure(request):
 
     elif "configuration_completed" in request.POST:
         days = int(request.POST["days"])
-        # print(request.POST)
+
         # retrieve all the selected exercises from the post data. values are stored in a list, each index = 1 day
         first_max_exercise = request.POST.getlist("first_max_exercise")
         first_sec_exercise = request.POST.getlist("first_sec_exercise")
@@ -184,29 +186,65 @@ def configure(request):
                 "configure_workout_day3" : configure_workout_day3
             })
 
-        # all configurations passed! Now build up the complete workout and send the user to it.
+        # all configurations passed! Now build up the complete workout.
         else:
-            #exercises = Exercise_Pool.objects.filter(user_id=request.user)
-            #max_vals = MaxValue.objects.filter(user_id=request.user)
-            cycle_name = "cycle2" #check if for pre-existing cycles and increment
-            timestamp = timezone.now()
 
-            exercise_1 = MaxValue.objects.get(pk = first_max_exercise[0])
-            workout = WorkoutPlan(
-                user_id = request.user,
-                cycle_name = cycle_name, #needs a check of all previous cycles
-                week = 1, # needs a for loop through all 16 weeks
-                day = 1, # needs a for loop through all possible days (48/64/80)
-                exercise_1 = exercise_1.exercise, #needs a conditional to check either max or sec exercise
-                exercise_1_weight = float(exercise_1.max_value)*0.70,
-                timestamp = timestamp
-                )
-            workout.save()
+            """ Global variables for a mesocycle """
+            # get all currently existing cycles and increment the highest/latest by 1 to start a new cycle
+            previous_cycles = WorkoutPlan.objects.filter(user_id=request.user)
+            if previous_cycles:
+                retrieve_unique_cycles = list(set([int(cycle.cycle_name[5:]) for cycle in previous_cycles]))
+                cycle_name = "cycle" + str(max(retrieve_unique_cycles) + 1)
+            else:
+                cycle_name = "cycle1"
+
+            timestamp = date.today()
+            day_count = 1
+            week_count = 1
+            """ ------------------------------- """
+
+            def selected_exercises(max, sec):
+                # Determine whether the user selected a max exercise or a secondary exercise per row per day
+                # Using the primary key from POST, search for the selected exercise in the corresponding table/model
+                if max:
+                    exercise = MaxValue.objects.get(pk = max)
+                    return {"exercise" : exercise.exercise, "exercise_weight" : float(exercise.max_value)*0.70}
+                elif sec:
+                    exercise = Exercise_Pool.objects.get(pk = sec)
+                    return {"exercise" : exercise.title, "exercise_weight" : exercise.high_range}
+                else:
+                    return {"exercise" : "", "exercise_weight" : 0.00}
+                
+            # loop over 1 week in the entire mesocycle
+            for day in range(days):
+                # Currently, POST data is stored in a list. Each index = 1 day
+                exercise_1 = selected_exercises(first_max_exercise[day], second_max_exercise[day])
+                exercise_2 = selected_exercises(second_max_exercise[day], second_sec_exercise[day])
+                exercise_3 = selected_exercises(third_max_exercise[day], third_sec_exercise[day])
+                exercise_4 = selected_exercises(fourth_max_exercise[day], fourth_sec_exercise[day])
+
+                workout = WorkoutPlan(
+                    user_id = request.user,
+                    cycle_name = cycle_name,
+                    week_count = week_count,
+                    day_count = day_count,
+                    exercise_1 = exercise_1["exercise"],
+                    exercise_1_weight = exercise_1["exercise_weight"],
+                    exercise_2 = exercise_2["exercise"], 
+                    exercise_2_weight = exercise_2["exercise_weight"],
+                    exercise_3 = exercise_3["exercise"], 
+                    exercise_3_weight = exercise_3["exercise_weight"],
+                    exercise_4 = exercise_4["exercise"], 
+                    exercise_4_weight = exercise_4["exercise_weight"],
+                    timestamp = timestamp
+                    )
+                workout.save()
+                day_count += 1
 
             return redirect("profile")
-            # learn the database: https://docs.djangoproject.com/en/4.0/topics/db/queries/#creating-objects
-            # stackoverflow: https://stackoverflow.com/questions/26672077/django-model-vs-model-objects-create
 
 def workout(request, cycle):
+    #exercises = Exercise_Pool.objects.filter(user_id=request.user)
+    #max_vals = MaxValue.objects.filter(user_id=request.user)
     workout = get_list_or_404(WorkoutPlan, cycle_name=cycle, user_id=request.user) #filter the model based on URL snippet
     return render(request, "userprofile/workout.html", {"workout" : workout, "cycle" : cycle})
