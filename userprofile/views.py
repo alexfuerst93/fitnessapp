@@ -10,7 +10,7 @@ from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
 
 # database tables
-from .models import MaxValue, Exercise_Pool, musclegroups, WorkoutPlan
+from .models import MaxValue, Exercise_Pool, musclegroups, WorkoutPlan, Reps
 from .forms import CreateMaxValue, Exercise_Pool_Form, ConfigureWorkout
 from .helpers import epley
 
@@ -166,16 +166,16 @@ def configure(request):
         # retrieve all the selected exercises and sets from the post data. values are stored in a list, each index = 1 day
         first_max_exercise = request.POST.getlist("first_max_exercise")
         first_sec_exercise = request.POST.getlist("first_sec_exercise")
-        # first_sets = request.POST.getliste("first_sets")
+        first_sets = request.POST.getlist("first_sets")
         second_max_exercise = request.POST.getlist("second_max_exercise")
         second_sec_exercise = request.POST.getlist("second_sec_exercise")
-        # second_sets = request.POST.getliste("second_sets")
+        second_sets = request.POST.getlist("second_sets")
         third_max_exercise = request.POST.getlist("third_max_exercise")
         third_sec_exercise = request.POST.getlist("third_sec_exercise")
-        # third_sets = request.POST.getliste("third_sets")
+        third_sets = request.POST.getlist("third_sets")
         fourth_max_exercise = request.POST.getlist("fourth_max_exercise")
         fourth_sec_exercise = request.POST.getlist("fourth_sec_exercise")
-        # fourth_sets = request.POST.getliste("fourth_sets")
+        fourth_sets = request.POST.getlist("fourth_sets")
 
         # make form validations to ensure the user decided everytime between max and sec exercise
         # selected sets are never none
@@ -221,7 +221,7 @@ def configure(request):
                 else:
                     return {"exercise" : "", "exercise_weight" : 0.00}
                 
-            # loop over 1 week in the entire mesocycle
+            # loop over 1 week in the entire macrocycle
             for day in range(days):
                 # Currently, POST data is stored in a list. Each index = 1 day
                 exercise_1 = selected_exercises(first_max_exercise[day], second_max_exercise[day])
@@ -236,26 +236,36 @@ def configure(request):
                     day_count = day_count,
                     exercise_1 = exercise_1["exercise"],
                     exercise_1_weight = exercise_1["exercise_weight"],
+                    exercise_1_setcount = first_sets[day],
                     exercise_2 = exercise_2["exercise"], 
                     exercise_2_weight = exercise_2["exercise_weight"],
+                    exercise_2_setcount = second_sets[day],
                     exercise_3 = exercise_3["exercise"], 
                     exercise_3_weight = exercise_3["exercise_weight"],
+                    exercise_3_setcount = third_sets[day],
                     exercise_4 = exercise_4["exercise"], 
                     exercise_4_weight = exercise_4["exercise_weight"],
+                    exercise_4_setcount = fourth_sets[day],
                     timestamp = timestamp
                     )
                 workout.save()
                 day_count += 1
 
             # better: direct the user to his newly created workout!
+            # return workout(request, cycle_name)
             return redirect("profile")
 
 def workout(request, cycle):
-    #exercises = Exercise_Pool.objects.filter(user_id=request.user)
-    #max_vals = MaxValue.objects.filter(user_id=request.user)
     workout = get_list_or_404(WorkoutPlan, cycle_name=cycle, user_id=request.user) #filter the model based on URL snippet
-    # days = list(set([entry.day_count for entry in workout]))
-    return render(request, "userprofile/workout.html", {"workout" : workout, "cycle" : cycle})
+    
+    if request.POST == "GET":
+        return render(request, "userprofile/workout.html", {"workout" : workout, "cycle" : cycle})
+
+    elif "workout_done" in request.POST:
+        print(request.POST)
+        # update WorkoutPlan with newly achieved reps
+        return render(request, "userprofile/workout.html", {"workout" : workout, "cycle" : cycle})
+
 
 def contact(request):
     return render(request, "userprofile/contact.html")

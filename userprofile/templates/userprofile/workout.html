@@ -29,7 +29,10 @@
             <tr>
                 <td>{{ entry.exercise_1 }}</td>
                 <td>{{ entry.exercise_1_weight }}</td>
-                <td>{% for set in entry.exercise_1_set %} <input type="text" name="exercise_id" value="achieved_reps"> {% endfor %}</td>
+                <!-- if empty, loop through the IIIIs in Workout Plan
+                If not empty, loop through the FILLED values in Reps!
+                -->
+                <td>{% for set in entry.exercise_1_setcount %} <input type="number" required="required" name="{{ set }}"  value="{{ entry.exercise_1_set_{{ set }}"> {% endfor %}</td>
             </tr>
             <tr>
                 <td>{{ entry.exercise_2 }}</td>
@@ -48,7 +51,7 @@
             </tr>
         </tbody>
     </table>
-    <input type="submit" class="btn btn-primary" name="workout_done{{ day_count }}" value="Day {{ entry.day_count }} completed">
+    <input type="submit" class="btn btn-primary" name="workout_done" value="Day {{ entry.day_count }} completed">
     </form>
 </div>
 </div>
