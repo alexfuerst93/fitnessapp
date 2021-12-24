@@ -38,24 +38,13 @@ class Exercise_Pool(models.Model):
         return self.title
 
 
-# class Reps(models.Model):
-#     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-#     cycle_name = models.CharField(max_length=50)
-#     exercise_name = models.CharField(max_lenght=100)
-#     exercise_1_set_1 = models.IntegerField(blank=True, null=True)
-#     exercise_1_set_2 = models.IntegerField(blank=True, null=True)
-#     exercise_1_set_3 = models.IntegerField(blank=True, null=True)
-#     exercise_1_set_4 = models.IntegerField(blank=True, null=True)
-#     exercise_1_set_5 = models.IntegerField(blank=True, null=True)
-#     exercise_1_set_6 = models.IntegerField(blank=True, null=True)
-
-
 class WorkoutPlan(models.Model):
     # sole purpose of this model is to read from the other 2 tables and present results as one macrocycle
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     cycle_name = models.CharField(max_length=50)
     week_count = models.IntegerField()
     day_count = models.IntegerField()
+    # add a boolean to track, what days are completed!
 
     exercise_1 = models.CharField(max_length=100)
     exercise_1_weight = models.DecimalField(max_digits=5, decimal_places=2)
@@ -80,5 +69,5 @@ class WorkoutPlan(models.Model):
     timestamp = models.DateField()
 
     def __str__(self):
-        return self.cycle_name
+        return f"{self.cycle_name} + week:{self.week_count} + day:{self.day_count}"
 

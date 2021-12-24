@@ -1,7 +1,7 @@
 {% extends 'userprofile/base.html' %}
 {% block content %}
 
-<h1>Your current Mesocycle:</h1>
+<h1>Your current Macrocycle:</h1>
 
 
 {% for entry in workout %}
@@ -32,7 +32,7 @@
                 <!-- if empty, loop through the IIIIs in Workout Plan
                 If not empty, loop through the FILLED values in Reps!
                 -->
-                <td>{% for set in entry.exercise_1_setcount %} <input type="number" required="required" name="{{ set }}"  value="{{ entry.exercise_1_set_{{ set }}"> {% endfor %}</td>
+                <td>{% for set in entry.exercise_1_setcount %} <input type="number" required="required" name="{{ exercise_1 }}"  value="{{ exercise_1_set|add:set }}"> {% endfor %}</td>
             </tr>
             <tr>
                 <td>{{ entry.exercise_2 }}</td>
@@ -51,6 +51,7 @@
             </tr>
         </tbody>
     </table>
+    <input type="hidden" name="day" value="{{ entry.day_count }}">
     <input type="submit" class="btn btn-primary" name="workout_done" value="Day {{ entry.day_count }} completed">
     </form>
 </div>

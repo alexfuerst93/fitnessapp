@@ -1,7 +1,11 @@
 {% extends 'userprofile/base.html' %}
 {% block content %}
 
-<p>1. How many days per week do you want to workout?</p>
+<p>1. Be sure, you have configured all your primary and accessory exercises.</p>
+<p>Button: Yes I did, let me continue</p>
+<p>Button: Oh shit, no, let me go back to my profile!</p>
+
+<p>2. How many days per week do you want to workout?</p>
 <form action="{% url 'configure' %}" method="POST">
     {% csrf_token %}
     <input type="radio" name="days" value="3" id="3 days"><label for="3 days">3 days</label><br>
@@ -12,7 +16,7 @@
 
 <p>You selected {{ days }} days.</p>
 
-<p>2. Choose your exercises</p>
+<p>3. Choose your exercises</p>
 
 <div class="row justify-content-center">
 <p>{{ error }}</p>

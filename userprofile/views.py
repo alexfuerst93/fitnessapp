@@ -10,7 +10,7 @@ from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
 
 # database tables
-from .models import MaxValue, Exercise_Pool, musclegroups, WorkoutPlan, Reps
+from .models import MaxValue, Exercise_Pool, musclegroups, WorkoutPlan
 from .forms import CreateMaxValue, Exercise_Pool_Form, ConfigureWorkout
 from .helpers import epley
 
@@ -258,11 +258,18 @@ def configure(request):
 def workout(request, cycle):
     workout = get_list_or_404(WorkoutPlan, cycle_name=cycle, user_id=request.user) #filter the model based on URL snippet
     
-    if request.POST == "GET":
+    if request.method == "GET":
         return render(request, "userprofile/workout.html", {"workout" : workout, "cycle" : cycle})
 
     elif "workout_done" in request.POST:
         print(request.POST)
+        todays_workout = get_object_or_404(WorkoutPlan, cycle_name=cycle, user_id=request.user, day_count=request.POST["day"])
+
+        set_1 = request.POST.getlist("exercise_1")
+        todays_workout.exercise_1_set_I = set_1[0]
+        ### ??? dynamic length ??? ###
+
+        # set boolean for achieved day
         # update WorkoutPlan with newly achieved reps
         return render(request, "userprofile/workout.html", {"workout" : workout, "cycle" : cycle})
 
