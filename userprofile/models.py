@@ -44,28 +44,36 @@ class WorkoutPlan(models.Model):
     cycle_name = models.CharField(max_length=50)
     week_count = models.IntegerField()
     day_count = models.IntegerField()
-    # add a boolean to track, what days are completed!
+    day_completed = models.BooleanField(default=False)
 
     exercise_1 = models.CharField(max_length=100)
     exercise_1_weight = models.DecimalField(max_digits=5, decimal_places=2)
-    exercise_1_setcount = models.CharField(max_length=10) # total amount of sets
-    exercise_1_set_I = models.IntegerField(blank=True, null=True) # achieved reps per set
-    exercise_1_set_II = models.IntegerField(blank=True, null=True)
-    exercise_1_set_III = models.IntegerField(blank=True, null=True)
-    exercise_1_set_IIII = models.IntegerField(blank=True, null=True)
-    exercise_1_set_IIIII = models.IntegerField(blank=True, null=True)
-    exercise_1_set_IIIIII = models.IntegerField(blank=True, null=True)
-
+    exercise_1_set_1 = models.IntegerField(blank=True, null=True) # achieved reps per set
+    exercise_1_set_2 = models.IntegerField(blank=True, null=True)
+    exercise_1_set_3 = models.IntegerField(blank=True, null=True)
+    exercise_1_set_4 = models.IntegerField(blank=True, null=True)
 
     exercise_2 = models.CharField(max_length=100)
     exercise_2_weight = models.DecimalField(max_digits=5, decimal_places=2)
-    exercise_2_setcount = models.CharField(max_length=10)
+    exercise_2_set_1 = models.IntegerField(blank=True, null=True)
+    exercise_2_set_2 = models.IntegerField(blank=True, null=True)
+    exercise_2_set_3 = models.IntegerField(blank=True, null=True)
+    exercise_2_set_4 = models.IntegerField(blank=True, null=True)
+
     exercise_3 = models.CharField(max_length=100)
     exercise_3_weight = models.DecimalField(max_digits=5, decimal_places=2)
-    exercise_3_setcount = models.CharField(max_length=10)
+    exercise_3_set_1 = models.IntegerField(blank=True, null=True)
+    exercise_3_set_2 = models.IntegerField(blank=True, null=True)
+    exercise_3_set_3 = models.IntegerField(blank=True, null=True)
+    exercise_3_set_4 = models.IntegerField(blank=True, null=True)
+
     exercise_4 = models.CharField(max_length=100)
     exercise_4_weight = models.DecimalField(max_digits=5, decimal_places=2)
-    exercise_4_setcount = models.CharField(max_length=10)
+    exercise_4_set_1 = models.IntegerField(blank=True, null=True)
+    exercise_4_set_2 = models.IntegerField(blank=True, null=True)
+    exercise_4_set_3 = models.IntegerField(blank=True, null=True)
+    exercise_4_set_4 = models.IntegerField(blank=True, null=True)
+
     timestamp = models.DateField()
 
     def __str__(self):

@@ -163,22 +163,17 @@ def configure(request):
         days = int(request.POST["days"])
         print(request.POST)
 
-        # retrieve all the selected exercises and sets from the post data. values are stored in a list, each index = 1 day
+        # retrieve all the selected exercises from the post data. values are stored in a list, each index = 1 day
         first_max_exercise = request.POST.getlist("first_max_exercise")
         first_sec_exercise = request.POST.getlist("first_sec_exercise")
-        first_sets = request.POST.getlist("first_sets")
         second_max_exercise = request.POST.getlist("second_max_exercise")
         second_sec_exercise = request.POST.getlist("second_sec_exercise")
-        second_sets = request.POST.getlist("second_sets")
         third_max_exercise = request.POST.getlist("third_max_exercise")
         third_sec_exercise = request.POST.getlist("third_sec_exercise")
-        third_sets = request.POST.getlist("third_sets")
         fourth_max_exercise = request.POST.getlist("fourth_max_exercise")
         fourth_sec_exercise = request.POST.getlist("fourth_sec_exercise")
-        fourth_sets = request.POST.getlist("fourth_sets")
 
         # make form validations to ensure the user decided everytime between max and sec exercise
-        # selected sets are never none
         if first_max_exercise[0] and first_sec_exercise[0]:
             error = "Select either a max exercise or a secondary exercise per day per row."
             configure_workout_day1 = ConfigureWorkout()
@@ -236,16 +231,12 @@ def configure(request):
                     day_count = day_count,
                     exercise_1 = exercise_1["exercise"],
                     exercise_1_weight = exercise_1["exercise_weight"],
-                    exercise_1_setcount = first_sets[day],
                     exercise_2 = exercise_2["exercise"], 
                     exercise_2_weight = exercise_2["exercise_weight"],
-                    exercise_2_setcount = second_sets[day],
                     exercise_3 = exercise_3["exercise"], 
                     exercise_3_weight = exercise_3["exercise_weight"],
-                    exercise_3_setcount = third_sets[day],
                     exercise_4 = exercise_4["exercise"], 
                     exercise_4_weight = exercise_4["exercise_weight"],
-                    exercise_4_setcount = fourth_sets[day],
                     timestamp = timestamp
                     )
                 workout.save()
@@ -256,21 +247,51 @@ def configure(request):
             return redirect("profile")
 
 def workout(request, cycle):
-    workout = get_list_or_404(WorkoutPlan, cycle_name=cycle, user_id=request.user) #filter the model based on URL snippet
     
     if request.method == "GET":
+        workout = get_list_or_404(WorkoutPlan, cycle_name=cycle, user_id=request.user) #filter the model based on URL snippet
         return render(request, "userprofile/workout.html", {"workout" : workout, "cycle" : cycle})
 
     elif "workout_done" in request.POST:
         print(request.POST)
+
+        # reminder: 1 entry in WorkoutPlan table = 1 day of training
         todays_workout = get_object_or_404(WorkoutPlan, cycle_name=cycle, user_id=request.user, day_count=request.POST["day"])
 
-        set_1 = request.POST.getlist("exercise_1")
-        todays_workout.exercise_1_set_I = set_1[0]
-        ### ??? dynamic length ??? ###
+        # retrieve all achieved reps per sets per exercise from POST and update table
+        ### use a modelform instead? ###
+        if "exercise_1" in request.POST:
+            sets_exercise_1 = request.POST.getlist("exercise_1")
+            todays_workout.exercise_1_set_1 = sets_exercise_1[0]
+            todays_workout.exercise_1_set_2 = sets_exercise_1[1]
+            todays_workout.exercise_1_set_3 = sets_exercise_1[2]
+            todays_workout.exercise_1_set_4 = sets_exercise_1[3]
+        
+        if "exercise_2" in request.POST:
+            sets_exercise_2 = request.POST.getlist("exercise_2")
+            todays_workout.exercise_2_set_1 = sets_exercise_2[0]
+            todays_workout.exercise_2_set_2 = sets_exercise_2[1]
+            todays_workout.exercise_2_set_3 = sets_exercise_2[2]
+            todays_workout.exercise_2_set_4 = sets_exercise_2[3]
 
-        # set boolean for achieved day
-        # update WorkoutPlan with newly achieved reps
+        if "exercise_3" in request.POST:
+            sets_exercise_3 = request.POST.getlist("exercise_1")
+            todays_workout.exercise_3_set_1 = sets_exercise_3[0]
+            todays_workout.exercise_3_set_2 = sets_exercise_3[1]
+            todays_workout.exercise_3_set_3 = sets_exercise_3[2]
+            todays_workout.exercise_3_set_4 = sets_exercise_3[3]
+
+        if "exercise_4" in request.POST:
+            sets_exercise_4 = request.POST.getlist("exercise_1")
+            todays_workout.exercise_4_set_1 = sets_exercise_4[0]
+            todays_workout.exercise_4_set_2 = sets_exercise_4[1]
+            todays_workout.exercise_4_set_3 = sets_exercise_4[2]
+            todays_workout.exercise_4_set_4 = sets_exercise_4[3]
+
+        todays_workout.day_completed = True
+        todays_workout.save()
+
+        workout = get_list_or_404(WorkoutPlan, cycle_name=cycle, user_id=request.user) #filter the model based on URL snippet
         return render(request, "userprofile/workout.html", {"workout" : workout, "cycle" : cycle})
 
 

@@ -4,8 +4,9 @@
 <h1>Your current Macrocycle:</h1>
 
 
-{% for entry in workout %}
 <div class="container">
+{% for entry in workout %}
+
 <div class="row justify-content-center">
     <form action="{% url 'workout' cycle %}" method="POST">
     {% csrf_token %}
@@ -26,37 +27,83 @@
             </tr>
         </thead>
         <tbody>
+            {% if entry.exercise_1 %}
             <tr>
                 <td>{{ entry.exercise_1 }}</td>
                 <td>{{ entry.exercise_1_weight }}</td>
-                <!-- if empty, loop through the IIIIs in Workout Plan
-                If not empty, loop through the FILLED values in Reps!
-                -->
-                <td>{% for set in entry.exercise_1_setcount %} <input type="number" required="required" name="{{ exercise_1 }}"  value="{{ exercise_1_set|add:set }}"> {% endfor %}</td>
+                {% if not entry.day_completed %}
+                <td>
+                    <input type="number" min="1" max="20" required="required" name="exercise_1">
+                    <input type="number" min="1" max="20" required="required" name="exercise_1">
+                    <input type="number" min="1" max="20" required="required" name="exercise_1">
+                    <input type="number" min="1" max="20" required="required" name="exercise_1">
+                </td>
+                {% else %}
+                <td><div class="d-inline mx-3">{{ entry.exercise_1_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_1_set_2 }}</div><div class="d-inline mx-3">{{ entry.exercise_1_set_3 }}</div><div class="d-inline mx-3">{{ entry.exercise_1_set_4 }}</div></td>
+                {% endif %}
             </tr>
+            {% endif %}
+            {% if entry.exercise_2 %}
             <tr>
                 <td>{{ entry.exercise_2 }}</td>
                 <td>{{ entry.exercise_2_weight }}</td>
-                <td>Some User Input</td>
+                {% if not entry.day_completed %}
+                <td>
+                    <input type="number" min="1" max="20" required="required" name="exercise_2">
+                    <input type="number" min="1" max="20" required="required" name="exercise_2">
+                    <input type="number" min="1" max="20" required="required" name="exercise_2">
+                    <input type="number" min="1" max="20" required="required" name="exercise_2">
+                </td>
+                {% else %}
+                <td><div class="d-inline mx-3">{{ entry.exercise_2_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_2_set_2 }}</div><div class="d-inline mx-3">{{ entry.exercise_2_set_3 }}</div><div class="d-inline mx-3">{{ entry.exercise_2_set_4 }}</div></td>
+                {% endif %}
             </tr>
+            {% endif %}
+            {% if exercise_3 %}
             <tr>
                 <td>{{ entry.exercise_3 }}</td>
                 <td>{{ entry.exercise_3_weight }}</td>
-                <td>Some User Input</td>
+                {% if not entry.day_completed %}
+                <td>
+                    <input type="number" min="1" max="20" required="required" name="exercise_3">
+                    <input type="number" min="1" max="20" required="required" name="exercise_3">
+                    <input type="number" min="1" max="20" required="required" name="exercise_3">
+                    <input type="number" min="1" max="20" required="required" name="exercise_3">
+                </td>
+                {% else %}
+                <td><div class="d-inline mx-3">{{ entry.exercise_3_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_3_set_2 }}</div><div class="d-inline mx-3">{{ entry.exercise_3_set_3 }}</div><div class="d-inline mx-3">{{ entry.exercise_3_set_4 }}</div></td>
+                {% endif %}
             </tr>
+            {% endif %}
+            {% if exercise_4 %}
             <tr>
                 <td>{{ entry.exercise_4 }}</td>
                 <td>{{ entry.exercise_4_weight }}</td>
-                <td>Some User Input</td>
+                {% if not entry.day_completed %}
+                <td>
+                    <input type="number" min="1" max="20" required="required" name="exercise_4">
+                    <input type="number" min="1" max="20" required="required" name="exercise_4">
+                    <input type="number" min="1" max="20" required="required" name="exercise_4">
+                    <input type="number" min="1" max="20" required="required" name="exercise_4">
+                </td>
+                {% else %}
+                <td><div class="d-inline mx-3">{{ entry.exercise_4_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_4_set_2 }}</div><div class="d-inline mx-3">{{ entry.exercise_4_set_3 }}</div><div class="d-inline mx-3">{{ entry.exercise_4_set_4 }}</div></td>
+                {% endif %}
             </tr>
+            {% endif %}
         </tbody>
     </table>
     <input type="hidden" name="day" value="{{ entry.day_count }}">
-    <input type="submit" class="btn btn-primary" name="workout_done" value="Day {{ entry.day_count }} completed">
+    {% if entry.day_completed %}
+    <p>Day {{ entry.day_count }} completed!</p>
+    {% else %}
+    <input type="submit" class="btn btn-primary" name="workout_done" value="Complete Day {{ entry.day_count }}">
+    {% endif %}
     </form>
 </div>
-</div>
+
 {% endfor %}
+</div>
 
 
 
