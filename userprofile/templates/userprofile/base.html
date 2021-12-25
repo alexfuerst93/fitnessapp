@@ -26,10 +26,10 @@
         <div class="navbar-nav">
             {% if user.is_authenticated %}
             <p>Logged In as {{ user.username }}</p>
+            <a href="{% url 'profile' %}" class="nav-item- nav-link">Profile</a>
             {% else %}
             <a href="{% url 'loginuser' %}" class="nav-item- nav-link">Login</a>
             {% endif %}
-            <a href="{% url 'profile' %}" class="nav-item- nav-link">Profile</a>
             <a href="{% url 'contact' %}" class="nav-item- nav-link">Contact</a>
             {% if user.is_authenticated %}
                 <form action="{% url 'logoutuser' %}" method="post">

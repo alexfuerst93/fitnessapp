@@ -18,24 +18,25 @@ def startpage(request):
     if request.method == "GET":
         return render(request, "userprofile/startpage.html", {"create_user" : UserCreationForm()})
     else:
+        # case 1: passwords do not match
+        # case 2: user already exists
         if request.POST["password1"] == request.POST["password2"]:
             try:
                 user = User.objects.create_user(request.POST["username"], password=request.POST["password1"])
                 user.save()
                 login(request, user)
-                return redirect("profile") # render creates content and issues status code 200 / redirect issues a 302 to the browser
+                return redirect("profile")
             except IntegrityError:
-                return render(request, "userprofile/startpage.html", {"create_user" : UserCreationForm(), "error" : "User already exists"})
+                return render(request, "userprofile/startpage.html", {"create_user" : UserCreationForm(), "error" : "User already exists!"})
         else:
-            return render(request, "userprofile/startpage.html", {"create_user" : UserCreationForm(), "error" : "Passwords do not match"})
-                # all about users: https://docs.djangoproject.com/en/3.2/topics/auth/default/
+            return render(request, "userprofile/startpage.html", {"create_user" : UserCreationForm(), "error" : "Passwords do not match!"})
 
 def profile(request):
     #databases
     max_vals = MaxValue.objects.filter(user_id=request.user)
     exercises = Exercise_Pool.objects.filter(user_id=request.user)
     workout = WorkoutPlan.objects.filter(user_id=request.user)
-    #form
+    #forms
     add_exercise = Exercise_Pool_Form()
     form_maxval = CreateMaxValue()
     
@@ -135,7 +136,7 @@ def loginuser(request):
     else:
         user = authenticate(request, username=request.POST["username"], password=request.POST["password"])
         if user is None:
-            return render(request, 'userprofile/loginuser.html', {'form' : AuthenticationForm(), 'error' : "User not found / Or password did not match"})
+            return render(request, 'userprofile/loginuser.html', {'form' : AuthenticationForm(), 'error' : "User not found or password did not match!"})
         else:
             login(request, user)
             return redirect('profile')

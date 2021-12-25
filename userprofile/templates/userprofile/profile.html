@@ -128,8 +128,8 @@
 {% endfor %}
 </div>
 
-<h2>View all your completed mesocycles!</h2>
-<a href="{% url 'configure' %}" class="btn btn-primary">Configure you next mesocycle!</a>
+<h2>View all your completed macrocycles!</h2>
+<a href="{% url 'configure' %}" class="btn btn-primary">Configure you next macrocycle!</a>
 
 {% for cycle in cycles %}
 <a href="{% url 'workout' cycle %}" class="btn btn-success">{{ cycle }}</a>

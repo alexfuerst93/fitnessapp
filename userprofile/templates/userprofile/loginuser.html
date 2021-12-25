@@ -1,12 +1,21 @@
 {% extends 'userprofile/base.html' %}
 {% block content %}
 
+<div class="container">
 <h1>Login</h1>
-<h2>{{ error }}</h2>
-<form method="POST" action="">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-</form>
 
+<div class="row justify-content-center bg-light">
+    <div class="col-3 my-5 p-3 text-white bg-dark shadow rounded">
+    <form action="" method="post">
+        {% csrf_token %}
+        {% if error %}<p class="bg-danger p-2">[Icon] {{ error }}</p>{% endif %}
+        <p>{{ form.username.label_tag }}<br> {{ form.username }}</p>
+        <p>{{ form.password.label_tag }}<br> {{ form.password }}</p>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+    </div>
+</div> 
+
+</div>
 {% endblock %}
+

@@ -3,23 +3,29 @@
 
 
 <div class="container">
-<div class="row justify-content-center">
-    <h1>Easily configure your Fitness-App based on "Beyond bigger leaner stronger"!</h1>
 
+<h1>Easily configure your Fitness-App based on "Beyond bigger leaner stronger"!</h1>
 
+<div class="row justify-content-center bg-light">
+    <div class="col-3 my-5 p-3 text-white bg-dark shadow rounded">
     <form action="" method="post">
         {% csrf_token %}
-        {{ create_user.as_p }}
-            {{ error }}
-            <button type="submit">Sign up!</button>
-        </form>
+        {% if error %}<p class="bg-danger p-2">[Icon] {{ error }}</p>{% endif %}
+        <p>{{ create_user.username.label_tag }}<br> {{ create_user.username }}</p>
+        <p>{{ create_user.password1.label_tag }}<br> {{ create_user.password1 }}</p>
+        <p>{{ create_user.password2.label_tag }}<br> {{ create_user.password2 }}</p>
+        <button type="submit" class="btn btn-primary">Sign up!</button>
+    </form>
+    </div>
+</div> 
 
+<div class="row justify-content-center my-5">
+    <h2>List at least 3 benefits for the user what this app is able to do:</h2>
     {% load static %}
     <img src="{% static '/userprofile/images/beach.jpg' %}" alt="beach">
-</div>
+    <p>Hier gehört noch ein erklärender Text, was Beyond Bigger Leaner Stronger eigentlich tut</p>
 </div>
 
-<p>Hier gehört noch ein erklärender Text, was Beyond Bigger Leaner Stronger eigentlich tut</p>
-
+</div>
 
 {% endblock %}
