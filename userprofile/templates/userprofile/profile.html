@@ -6,10 +6,12 @@
     <div class="row justify-content-center">
         <h1>This is your very own profile!</h1>
     </div>
-<br>
+    <br>
     
-<h2>Continue your current workout!</h2>
-<!-- The one with the highest increment on cycle_name? -->
+    <a href="{% url 'workout' current_cycle %}" class="btn btn-success">Continue your current workout!</a>
+    <a href="{% url 'configure' %}" class="btn btn-primary">Configure your next macrocycle!</a>
+    <br>
+
     
 <br>
 <h2>Calculate your Max Rep</h2>
@@ -128,12 +130,14 @@
 {% endfor %}
 </div>
 
-<h2>View all your completed macrocycles!</h2>
-<a href="{% url 'configure' %}" class="btn btn-primary">Configure you next macrocycle!</a>
 
+<h2>View all your past macrocycles</h3>
 {% for cycle in cycles %}
-<a href="{% url 'workout' cycle %}" class="btn btn-success">{{ cycle }}</a>
+<a href="{% url 'workout' cycle.cycle_name %}" class="btn btn-success">
+    <p><b>{{ cycle.cycle_name|capfirst }}</b><br>{{ cycle.timestamp|date:"d.m.Y" }}</p>
+</a>
 {% endfor %}
+
 
 </div>
 {% endblock %}

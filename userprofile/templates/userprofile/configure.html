@@ -1,83 +1,151 @@
 {% extends 'userprofile/base.html' %}
 {% block content %}
 
-<p>1. Be sure, you have configured all your primary and accessory exercises.</p>
-<p>Button: Yes I did, let me continue</p>
-<p>Button: Oh shit, no, let me go back to my profile!</p>
 
-<p>2. How many days per week do you want to workout?</p>
-<form action="{% url 'configure' %}" method="POST">
-    {% csrf_token %}
-    <input type="radio" name="days" value="3" id="3 days"><label for="3 days">3 days</label><br>
-    <input type="radio" name="days" value="4" id="4 days"><label for="4 days">4 days</label><br>
-    <input type="radio" name="days" value="5" id="5 days"><label for="5 days">5 days</label><br>
-    <input type="submit" name="day_amount">
-</form>
+<div class="container">
 
-<p>You selected {{ days }} days.</p>
+<div class="row justify-content-center">
+    <h4>1. Have you configured all your primary and accessory exercises?</h2>
+    <p>You cannot change exercises within a macrocycle.</p>
+    <form action="{% url 'configure' %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" class="btn btn-primary" name="exercises_confirmed" value="Yes, I did">
+    </form>
+    <a href="{% url 'profile' %}" class="btn btn-danger">No, I need to go back</a>
+</div>
 
+{% if step_1 %}
+<div class="row justify-content-center">
+    <h4>2. How many days per week do you want to workout?</h4>
+    <form action="{% url 'configure' %}" method="POST">
+        {% csrf_token %}
+        <select name="days" required>
+            <option value="">select</option>
+            <option value="3">3 days</option>
+            <option value="4">4 days</option>
+            <option value="5">5 days</option>
+        </select>
+        <input type="submit" class="btn btn-primary" name="day_amount" value="Confirm">
+    </form>
+</div>
+{% endif %}
+
+{% if step_1 and step_2 %}
 <p>3. Choose your exercises</p>
 
 <div class="row justify-content-center">
-<p>{{ error }}</p>
-<form action="{% url 'configure' %}" method="POST">
-{% csrf_token %}
-<table>
-    <thead>
-        <tr>
-            <th colspan="2">Day 1</th>
-            <th colspan="2">Day 2</th>
-            <th colspan="2">Day 3</th>
-        </tr>
-        <tr>
-            <th>Max Ex</th>
-            <th>Sec Ex</th>
-            <th>Max Ex</th>
-            <th>Sec Ex</th>
-            <th>Max Ex</th>
-            <th>Sec Ex</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>{{ configure_workout_day1.first_max_exercise }}</td>
-            <td>{{ configure_workout_day1.first_sec_exercise }}</td>
-            <td>{{ configure_workout_day2.first_max_exercise }}</td>
-            <td>{{ configure_workout_day2.first_sec_exercise }}</td>
-            <td>{{ configure_workout_day3.first_max_exercise }}</td>
-            <td>{{ configure_workout_day3.first_sec_exercise }}</td>
-        </tr>
-        <tr>
-            <td>{{ configure_workout_day1.second_max_exercise }}</td>
-            <td>{{ configure_workout_day1.second_sec_exercise }}</td>
-            <td>{{ configure_workout_day2.second_max_exercise }}</td>
-            <td>{{ configure_workout_day2.second_sec_exercise }}</td>
-            <td>{{ configure_workout_day3.second_max_exercise }}</td>
-            <td>{{ configure_workout_day3.second_sec_exercise }}</td>
-        </tr>
-        <tr>
-            <td>{{ configure_workout_day1.third_max_exercise }}</td>
-            <td>{{ configure_workout_day1.third_sec_exercise }}</td>
-            <td>{{ configure_workout_day2.third_max_exercise }}</td>
-            <td>{{ configure_workout_day2.third_sec_exercise }}</td>
-            <td>{{ configure_workout_day3.third_max_exercise }}</td>
-            <td>{{ configure_workout_day3.third_sec_exercise }}</td>
-        </tr>
-        <tr>
-            <td>{{ configure_workout_day1.fourth_max_exercise }}</td>
-            <td>{{ configure_workout_day1.fourth_sec_exercise }}</td>
-            <td>{{ configure_workout_day2.fourth_max_exercise }}</td>
-            <td>{{ configure_workout_day2.fourth_sec_exercise }}</td>
-            <td>{{ configure_workout_day3.fourth_max_exercise }}</td>
-            <td>{{ configure_workout_day3.fourth_sec_exercise }}</td>
-        </tr>
-    </tbody>
-</table>
-<input type="hidden" name="days" value="{{ days }}"> 
-<input type="submit" class="btn btn-primary" name="configuration_completed" value="Create my next cycle!">
+    <p>{{ error }}</p>
+    <form action="" method="POST">
+    {% csrf_token %}
+    <table>
+        <thead>
+            <tr>
+                <th colspan="2">Day 1</th>
+                <th colspan="2">Day 2</th>
+                <th colspan="2">Day 3</th>
+                {% if days == 4 %}
+                <th colspan="2">Day 4</th>
+                {% elif days == 5 %}
+                <th colspan="2">Day 4</th>
+                <th colspan="2">Day 5</th>
+                {% endif %}
+            </tr>
+            <tr>
+                <th>Primary</th>
+                <th>Accessory</th>
+                <th>Primary</th>
+                <th>Accessory</th>
+                <th>Primary</th>
+                <th>Accessory</th>
+                {% if days == 4 %}
+                <th>Primary</th>
+                <th>Accessory</th>
+                {% elif days == 5 %}
+                <th>Primary</th>
+                <th>Accessory</th>
+                <th>Primary</th>
+                <th>Accessory</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ configure_workout_day1.first_max_exercise }}</td>
+                <td>{{ configure_workout_day1.first_sec_exercise }}</td>
+                <td>{{ configure_workout_day2.first_max_exercise }}</td>
+                <td>{{ configure_workout_day2.first_sec_exercise }}</td>
+                <td>{{ configure_workout_day3.first_max_exercise }}</td>
+                <td>{{ configure_workout_day3.first_sec_exercise }}</td>
+                {% if days == 4 %}
+                <td>{{ configure_workout_day4.first_max_exercise }}</td>
+                <td>{{ configure_workout_day4.first_sec_exercise }}</td>
+                {% elif days == 5 %}
+                <td>{{ configure_workout_day4.first_max_exercise }}</td>
+                <td>{{ configure_workout_day4.first_sec_exercise }}</td>
+                <td>{{ configure_workout_day5.first_max_exercise }}</td>
+                <td>{{ configure_workout_day5.first_sec_exercise }}</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td>{{ configure_workout_day1.second_max_exercise }}</td>
+                <td>{{ configure_workout_day1.second_sec_exercise }}</td>
+                <td>{{ configure_workout_day2.second_max_exercise }}</td>
+                <td>{{ configure_workout_day2.second_sec_exercise }}</td>
+                <td>{{ configure_workout_day3.second_max_exercise }}</td>
+                <td>{{ configure_workout_day3.second_sec_exercise }}</td>
+                {% if days == 4 %}
+                <td>{{ configure_workout_day4.second_max_exercise }}</td>
+                <td>{{ configure_workout_day4.second_sec_exercise }}</td>
+                {% elif days == 5 %}
+                <td>{{ configure_workout_day4.second_max_exercise }}</td>
+                <td>{{ configure_workout_day4.second_sec_exercise }}</td>
+                <td>{{ configure_workout_day5.second_max_exercise }}</td>
+                <td>{{ configure_workout_day5.second_sec_exercise }}</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td>{{ configure_workout_day1.third_max_exercise }}</td>
+                <td>{{ configure_workout_day1.third_sec_exercise }}</td>
+                <td>{{ configure_workout_day2.third_max_exercise }}</td>
+                <td>{{ configure_workout_day2.third_sec_exercise }}</td>
+                <td>{{ configure_workout_day3.third_max_exercise }}</td>
+                <td>{{ configure_workout_day3.third_sec_exercise }}</td>
+                {% if days == 4 %}
+                <td>{{ configure_workout_day4.third_max_exercise }}</td>
+                <td>{{ configure_workout_day4.third_sec_exercise }}</td>
+                {% elif days == 5 %}
+                <td>{{ configure_workout_day4.third_max_exercise }}</td>
+                <td>{{ configure_workout_day4.third_sec_exercise }}</td>
+                <td>{{ configure_workout_day5.third_max_exercise }}</td>
+                <td>{{ configure_workout_day5.third_sec_exercise }}</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td>{{ configure_workout_day1.fourth_max_exercise }}</td>
+                <td>{{ configure_workout_day1.fourth_sec_exercise }}</td>
+                <td>{{ configure_workout_day2.fourth_max_exercise }}</td>
+                <td>{{ configure_workout_day2.fourth_sec_exercise }}</td>
+                <td>{{ configure_workout_day3.fourth_max_exercise }}</td>
+                <td>{{ configure_workout_day3.fourth_sec_exercise }}</td>
+                {% if days == 4 %}
+                <td>{{ configure_workout_day4.fourth_max_exercise }}</td>
+                <td>{{ configure_workout_day4.fourth_sec_exercise }}</td>
+                {% elif days == 5 %}
+                <td>{{ configure_workout_day4.fourth_max_exercise }}</td>
+                <td>{{ configure_workout_day4.fourth_sec_exercise }}</td>
+                <td>{{ configure_workout_day5.fourth_max_exercise }}</td>
+                <td>{{ configure_workout_day5.fourth_sec_exercise }}</td>
+                {% endif %}
+            </tr>
+        </tbody>
+    </table>
+    <input type="hidden" name="days" value="{{ days }}"> 
+    <input type="submit" class="btn btn-primary" name="configuration_completed" value="Create my next cycle!">
 
-</form>
+    </form>
 </div>
+{% endif %}
 
+</div>
 
 {% endblock %}
