@@ -1,157 +1,289 @@
 {% extends 'userprofile/base.html' %}
 {% block content %}
 
+<h1 class="my-4">Create Your New Macrocycle</h1>
 
 <div class="container">
 
-{% if step_3 %}
-<div> class="row justify-content-center"
-    <h4>Awesome! You created a new workout!</h4>
-    <a href="{% url 'workout' cycle_name %}" class="btn btn-success">Start your next macrocycle!!</a>
-</div>
-{% else %}
-
-<div class="row justify-content-center">
-    <h4>1. Have you configured all your primary and accessory exercises?</h2>
-    <p>You cannot change exercises within a macrocycle.</p>
-    <form action="{% url 'configure' %}" method="POST">
-        {% csrf_token %}
-        <input type="submit" class="btn btn-primary" name="exercises_confirmed" value="Yes, I did">
-    </form>
-    <a href="{% url 'profile' %}" class="btn btn-danger">No, I need to go back</a>
+<div class="row justify-content-between align-items-center bg-light mx-0 my-3 p-3 rounded {% if step_1 %} border border-success {% endif %}">
+    <div class="col-10">
+        <p class="m-0"><b>1. Have you configured all your primary and accessory exercises?</b><br>You cannot change exercises within a macrocycle.</p>
+    </div>
+    <div class="col">
+        <form action="{% url 'configure' %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-primary" name="exercises_confirmed" value="Yes">
+        </form>
+    </div>
+    <div class="col">
+        <a href="{% url 'profile' %}" class="btn btn-danger">No</a>
+    </div>
 </div>
 
 {% if step_1 %}
-<div class="row justify-content-center">
-    <h4>2. How many days per week do you want to workout?</h4>
-    <form action="{% url 'configure' %}" method="POST">
+<div class="row justify-content-between align-items-center bg-light mx-0 my-3 p-3 rounded {% if step_1 and step_2 %} border border-success {% endif %}">
+    <div class="col">
+        <p class="m-0"><b>2. How many days per week do you want to workout?</b></p>
+    </div>
+
+    <form action="{% url 'configure' %}" class="form-inline" method="POST">
         {% csrf_token %}
-        <select name="days" required>
-            <option value="">select</option>
-            <option value="3">3 days</option>
-            <option value="4">4 days</option>
-            <option value="5">5 days</option>
-        </select>
-        <input type="submit" class="btn btn-primary" name="day_amount" value="Confirm">
+            <select name="days" class="col form-control" required>
+                <option value="">select</option>
+                <option value="3">3 days</option>
+                <option value="4">4 days</option>
+                <option value="5">5 days</option>
+            </select>
+        <div class="col">
+            <input type="submit" class="btn btn-primary" name="day_amount" value="Confirm">
+        </div>
     </form>
+
 </div>
 {% endif %}
 
 {% if step_1 and step_2 %}
-<h4>3. Choose your exercises</h4>
 
-<div class="row justify-content-center">
-    <p>{{ error }}</p>
+<div class="bg-light mx-0 my-3 p-3 rounded">
+
+<div class="row justify-content-between align-items-center py-2 px-3">
+    <div class="col-8">
+        <p class="m-0"><b>3. Choose your exercises</b></p>
+    </div>
     <form action="" method="POST">
-    {% csrf_token %}
-    <table>
-        <thead>
+        {% csrf_token %}
+        <input type="hidden" name="days" value="{{ days }}">
+    <div class="col">
+        <input type="submit" class="btn btn-primary" name="configuration_completed" value="Create my next cycle!">
+    </div>
+</div>
+    
+{% if error %}
+<div class="row justify-content-center"><p class="col bg-danger text-white text-center p-2 m-3"><b>[Icon] {{ error }}</b></p></div>
+{% endif %}
+
+<div class="row">
+    <div class="col-4 my-2">
+    <table class="table table-bordered table-sm">
+        <thead class="thead-dark">
             <tr>
-                <th colspan="2">Day 1</th>
-                <th colspan="2">Day 2</th>
-                <th colspan="2">Day 3</th>
-                {% if days == 4 %}
-                <th colspan="2">Day 4</th>
-                {% elif days == 5 %}
-                <th colspan="2">Day 4</th>
-                <th colspan="2">Day 5</th>
-                {% endif %}
+                <th scope="col"></th>
+                <th scope="col" colspan="3">Day 1</th>
             </tr>
             <tr>
-                <th>Primary</th>
-                <th>Accessory</th>
-                <th>Primary</th>
-                <th>Accessory</th>
-                <th>Primary</th>
-                <th>Accessory</th>
-                {% if days == 4 %}
-                <th>Primary</th>
-                <th>Accessory</th>
-                {% elif days == 5 %}
-                <th>Primary</th>
-                <th>Accessory</th>
-                <th>Primary</th>
-                <th>Accessory</th>
-                {% endif %}
+                <th scope="col"></th>
+                <th scope="col">Primary</th>
+                <th scope="col"></th>
+                <th scope="col">Accessory</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>{{ configure_workout_day1.first_max_exercise }}</td>
-                <td>{{ configure_workout_day1.first_sec_exercise }}</td>
-                <td>{{ configure_workout_day2.first_max_exercise }}</td>
-                <td>{{ configure_workout_day2.first_sec_exercise }}</td>
-                <td>{{ configure_workout_day3.first_max_exercise }}</td>
-                <td>{{ configure_workout_day3.first_sec_exercise }}</td>
-                {% if days == 4 %}
-                <td>{{ configure_workout_day4.first_max_exercise }}</td>
-                <td>{{ configure_workout_day4.first_sec_exercise }}</td>
-                {% elif days == 5 %}
-                <td>{{ configure_workout_day4.first_max_exercise }}</td>
-                <td>{{ configure_workout_day4.first_sec_exercise }}</td>
-                <td>{{ configure_workout_day5.first_max_exercise }}</td>
-                <td>{{ configure_workout_day5.first_sec_exercise }}</td>
-                {% endif %}
+                <th scope="row">1st</th>
+                <td class="table-primary">{{ configure_workout_day1.first_max_exercise }}</td>
+                <td>or</td>
+                <td class="table-success">{{ configure_workout_day1.first_sec_exercise }}</td>
             </tr>
             <tr>
-                <td>{{ configure_workout_day1.second_max_exercise }}</td>
-                <td>{{ configure_workout_day1.second_sec_exercise }}</td>
-                <td>{{ configure_workout_day2.second_max_exercise }}</td>
-                <td>{{ configure_workout_day2.second_sec_exercise }}</td>
-                <td>{{ configure_workout_day3.second_max_exercise }}</td>
-                <td>{{ configure_workout_day3.second_sec_exercise }}</td>
-                {% if days == 4 %}
-                <td>{{ configure_workout_day4.second_max_exercise }}</td>
-                <td>{{ configure_workout_day4.second_sec_exercise }}</td>
-                {% elif days == 5 %}
-                <td>{{ configure_workout_day4.second_max_exercise }}</td>
-                <td>{{ configure_workout_day4.second_sec_exercise }}</td>
-                <td>{{ configure_workout_day5.second_max_exercise }}</td>
-                <td>{{ configure_workout_day5.second_sec_exercise }}</td>
-                {% endif %}
+                <th scope="row">2nd</th>
+                <td class="table-primary">{{ configure_workout_day1.second_max_exercise }}</td>
+                <td>or</td>
+                <td class="table-success">{{ configure_workout_day1.second_sec_exercise }}</td>
             </tr>
             <tr>
-                <td>{{ configure_workout_day1.third_max_exercise }}</td>
-                <td>{{ configure_workout_day1.third_sec_exercise }}</td>
-                <td>{{ configure_workout_day2.third_max_exercise }}</td>
-                <td>{{ configure_workout_day2.third_sec_exercise }}</td>
-                <td>{{ configure_workout_day3.third_max_exercise }}</td>
-                <td>{{ configure_workout_day3.third_sec_exercise }}</td>
-                {% if days == 4 %}
-                <td>{{ configure_workout_day4.third_max_exercise }}</td>
-                <td>{{ configure_workout_day4.third_sec_exercise }}</td>
-                {% elif days == 5 %}
-                <td>{{ configure_workout_day4.third_max_exercise }}</td>
-                <td>{{ configure_workout_day4.third_sec_exercise }}</td>
-                <td>{{ configure_workout_day5.third_max_exercise }}</td>
-                <td>{{ configure_workout_day5.third_sec_exercise }}</td>
-                {% endif %}
+                <th scope="row">3rd</th>
+                <td class="table-primary">{{ configure_workout_day1.third_max_exercise }}</td>
+                <td>or</td>
+                <td class="table-success">{{ configure_workout_day1.third_sec_exercise }}</td>
             </tr>
             <tr>
-                <td>{{ configure_workout_day1.fourth_max_exercise }}</td>
-                <td>{{ configure_workout_day1.fourth_sec_exercise }}</td>
-                <td>{{ configure_workout_day2.fourth_max_exercise }}</td>
-                <td>{{ configure_workout_day2.fourth_sec_exercise }}</td>
-                <td>{{ configure_workout_day3.fourth_max_exercise }}</td>
-                <td>{{ configure_workout_day3.fourth_sec_exercise }}</td>
-                {% if days == 4 %}
-                <td>{{ configure_workout_day4.fourth_max_exercise }}</td>
-                <td>{{ configure_workout_day4.fourth_sec_exercise }}</td>
-                {% elif days == 5 %}
-                <td>{{ configure_workout_day4.fourth_max_exercise }}</td>
-                <td>{{ configure_workout_day4.fourth_sec_exercise }}</td>
-                <td>{{ configure_workout_day5.fourth_max_exercise }}</td>
-                <td>{{ configure_workout_day5.fourth_sec_exercise }}</td>
-                {% endif %}
+                <th scope="row">4th</th>
+                <td class="table-primary">{{ configure_workout_day1.fourth_max_exercise }}</td>
+                <td>or</td>
+                <td class="table-success">{{ configure_workout_day1.fourth_sec_exercise }}</td>
             </tr>
         </tbody>
     </table>
-    <input type="hidden" name="days" value="{{ days }}"> 
-    <input type="submit" class="btn btn-primary" name="configuration_completed" value="Create my next cycle!">
+    </div>
+    
+    <div class="col-4 my-2">
+    <table class="table table-bordered table-sm">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col"></th>
+                <th scope="col" colspan="3">Day 2</th>
+            </tr>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Primary</th>
+                <th scope="col"></th>
+                <th scope="col">Accessory</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">1st</th>
+                <td class="table-primary">{{ configure_workout_day2.first_max_exercise }}</td>
+                <td>or</td>
+                <td class="table-success">{{ configure_workout_day2.first_sec_exercise }}</td>
+            </tr>
+            <tr>
+                <th scope="row">2nd</th>
+                <td class="table-primary">{{ configure_workout_day2.second_max_exercise }}</td>
+                <td>or</td>
+                <td class="table-success">{{ configure_workout_day2.second_sec_exercise }}</td>
+            </tr>
+            <tr>
+                <th scope="row">3rd</th>
+                <td class="table-primary">{{ configure_workout_day2.third_max_exercise }}</td>
+                <td>or</td>
+                <td class="table-success">{{ configure_workout_day2.third_sec_exercise }}</td>
+            </tr>
+            <tr>
+                <th scope="row">4th</th>
+                <td class="table-primary">{{ configure_workout_day2.fourth_max_exercise }}</td>
+                <td>or</td>
+                <td class="table-success">{{ configure_workout_day2.fourth_sec_exercise }}</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+
+    <div class="col-4 my-2">
+    <table class="table table-bordered table-sm">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col"></th>
+                <th scope="col" colspan="3">Day 3</th>
+            </tr>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Primary</th>
+                <th scope="col"></th>
+                <th scope="col">Accessory</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">1st</th>
+                <td class="table-primary">{{ configure_workout_day3.first_max_exercise }}</td>
+                <td>or</td>
+                <td class="table-success">{{ configure_workout_day3.first_sec_exercise }}</td>
+            </tr>
+            <tr>
+                <th scope="row">2nd</th>
+                <td class="table-primary">{{ configure_workout_day3.second_max_exercise }}</td>
+                <td>or</td>
+                <td class="table-success">{{ configure_workout_day3.second_sec_exercise }}</td>
+            </tr>
+            <tr>
+                <th scope="row">3rd</th>
+                <td class="table-primary">{{ configure_workout_day3.third_max_exercise }}</td>
+                <td>or</td>
+                <td class="table-success">{{ configure_workout_day3.third_sec_exercise }}</td>
+            </tr>
+            <tr>
+                <th scope="row">4th</th>
+                <td class="table-primary">{{ configure_workout_day3.fourth_max_exercise }}</td>
+                <td>or</td>
+                <td class="table-success">{{ configure_workout_day3.fourth_sec_exercise }}</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+
+    {% if days == 4 or days == 5%}
+    <div class="col-4 my-2">
+    <table class="table table-bordered table-sm">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col"></th>
+                <th scope="col" colspan="3">Day 4</th>
+            </tr>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Primary</th>
+                <th scope="col"></th>
+                <th scope="col">Accessory</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">1st</th>
+                <td class="table-primary">{{ configure_workout_day4.first_max_exercise }}</td>
+                <td>or</td>
+                <td class="table-success">{{ configure_workout_day4.first_sec_exercise }}</td>
+            </tr>
+            <tr>
+                <th scope="row">2nd</th>
+                <td class="table-primary">{{ configure_workout_day4.second_max_exercise }}</td>
+                <td>or</td>
+                <td class="table-success">{{ configure_workout_day4.second_sec_exercise }}</td>
+            </tr>
+            <tr>
+                <th scope="row">3rd</th>
+                <td class="table-primary">{{ configure_workout_day4.third_max_exercise }}</td>
+                <td>or</td>
+                <td class="table-success">{{ configure_workout_day4.third_sec_exercise }}</td>
+            </tr>
+            <tr>
+                <th scope="row">4th</th>
+                <td class="table-primary">{{ configure_workout_day4.fourth_max_exercise }}</td>
+                <td>or</td>
+                <td class="table-success">{{ configure_workout_day4.fourth_sec_exercise }}</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+    {% endif %}
+    {% if days == 5 %}
+    <div class="col-4 my-2">
+    <table class="table table-bordered table-sm">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col"></th>
+                <th scope="col" colspan="3">Day 5</th>
+            </tr>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Primary</th>
+                <th scope="col"></th>
+                <th scope="col">Accessory</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">1st</th>
+                <td class="table-primary">{{ configure_workout_day5.first_max_exercise }}</td>
+                <td>or</td>
+                <td class="table-success">{{ configure_workout_day5.first_sec_exercise }}</td>
+            </tr>
+            <tr>
+                <th scope="row">2nd</th>
+                <td class="table-primary">{{ configure_workout_day5.second_max_exercise }}</td>
+                <td>or</td>
+                <td class="table-success">{{ configure_workout_day5.second_sec_exercise }}</td>
+            </tr>
+            <tr>
+                <th scope="row">3rd</th>
+                <td class="table-primary">{{ configure_workout_day5.third_max_exercise }}</td>
+                <td>or</td>
+                <td class="table-success">{{ configure_workout_day5.third_sec_exercise }}</td>
+            </tr>
+            <tr>
+                <th scope="row">4th</th>
+                <td class="table-primary">{{ configure_workout_day5.fourth_max_exercise }}</td>
+                <td>or</td>
+                <td class="table-success">{{ configure_workout_day5.fourth_sec_exercise }}</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+    {% endif %}
+</div>
 
     </form>
 </div>
-{% endif %}
 {% endif %}
 
 </div>

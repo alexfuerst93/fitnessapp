@@ -228,7 +228,7 @@ def configure(request):
         if not check_input([first_max_exercise, first_sec_exercise, second_max_exercise, second_sec_exercise, third_max_exercise, third_sec_exercise, fourth_max_exercise, fourth_sec_exercise]):
             # all lists are empty, which means the user didn't select a single exercise
             setup = workout_configurator(days)
-            setup["error"] = "You didnt' select an exercise."
+            setup["error"] = "Please select exercises!"
             return render(request, "userprofile/configure.html", setup)
 
         elif not all([workout_validator(days, first_max_exercise, first_sec_exercise), workout_validator(days, second_max_exercise, second_sec_exercise), 
@@ -292,8 +292,10 @@ def configure(request):
                 cycle.save()
                 day_count += 1
 
-            return render(request, "userprofile/configure.html", {"step_3" : True, "cycle_name" : cycle_name})
+            return render(request, "userprofile/success.html", {"cycle_name" : cycle_name})
 
+def success(request):
+    return render(request, "userprofile/success.html")
 
 def contact(request):
     return render(request, "userprofile/contact.html")

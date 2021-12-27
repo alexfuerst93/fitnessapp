@@ -1,0 +1,11 @@
+{% extends 'userprofile/base.html' %}
+{% block content %}
+
+{% if cycle_name %}
+<h1 class="my-4">You successfully created a new Macrocycle</h1>
+<div class="row justify-content-center">
+    <a href="{% url 'workout' cycle_name %}" class="btn btn-success p-3">Start your workout now!</a>
+</div>
+{% endif %}
+
+{% endblock %}
