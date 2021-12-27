@@ -6,6 +6,13 @@
 <div class="row justify-content-center">
     <a href="{% url 'workout' cycle_name %}" class="btn btn-success p-3">Start your workout now!</a>
 </div>
+{% else %}
+<h1 class="my-4">It seems you are lost!</h1>
+<div class="row justify-content-center">
+    <a href="{% url 'profile' %}" class="btn btn-outline-danger p-3">Go back to your profile!</a>
+</div>
 {% endif %}
+
+
 
 {% endblock %}
