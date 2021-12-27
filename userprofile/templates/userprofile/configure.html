@@ -4,6 +4,13 @@
 
 <div class="container">
 
+{% if step_3 %}
+<div> class="row justify-content-center"
+    <h4>Awesome! You created a new workout!</h4>
+    <a href="{% url 'workout' cycle_name %}" class="btn btn-success">Start your next macrocycle!!</a>
+</div>
+{% else %}
+
 <div class="row justify-content-center">
     <h4>1. Have you configured all your primary and accessory exercises?</h2>
     <p>You cannot change exercises within a macrocycle.</p>
@@ -31,7 +38,7 @@
 {% endif %}
 
 {% if step_1 and step_2 %}
-<p>3. Choose your exercises</p>
+<h4>3. Choose your exercises</h4>
 
 <div class="row justify-content-center">
     <p>{{ error }}</p>
@@ -144,6 +151,7 @@
 
     </form>
 </div>
+{% endif %}
 {% endif %}
 
 </div>

@@ -5,6 +5,15 @@ def epley(weight, reps):
     return int(round(0.033 * reps * weight + weight, 0))
 
 
+def check_input(summed_request):
+    # summed_request is a list with nested lists inside, corresponding to the selected exercises
+    for request in summed_request:
+        for val in request:
+            if val:
+                return True
+    return False
+
+
 def workout_validator(idx, max, sec):
     # this function uses the user-selected days to loop over the index of the user-selected exercises to perform validation
     idx -= 1

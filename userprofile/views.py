@@ -12,7 +12,7 @@ from django.contrib.auth import login, logout, authenticate
 # database tables
 from .models import MaxValue, Exercise_Pool, musclegroups, WorkoutPlan
 from .forms import CreateMaxValue, Exercise_Pool_Form, ConfigureWorkout
-from .helpers import epley, workout_validator, workout_configurator
+from .helpers import epley, check_input, workout_validator, workout_configurator
 
 def startpage(request):
     if request.method == "GET":
@@ -144,106 +144,6 @@ def loginuser(request):
             return redirect('profile')
 
 
-
-def configure(request):
-    if request.method == "GET":
-        return render(request, "userprofile/configure.html")
-
-    elif "exercises_confirmed" in request.POST:
-        return render(request, "userprofile/configure.html", {"step_1" : True})
-    
-    elif "day_amount" in request.POST:
-        days = int(request.POST["days"])
-        return render(request, "userprofile/configure.html", workout_configurator(days))
-
-    elif "configuration_completed" in request.POST:
-        days = int(request.POST["days"])
-        print(request.POST)
-
-        # retrieve all the selected exercises from the post data. values are stored in a list, each index = 1 day
-        first_max_exercise = request.POST.getlist("first_max_exercise")
-        print(first_max_exercise)
-
-        first_sec_exercise = request.POST.getlist("first_sec_exercise")
-        second_max_exercise = request.POST.getlist("second_max_exercise")
-        second_sec_exercise = request.POST.getlist("second_sec_exercise")
-        third_max_exercise = request.POST.getlist("third_max_exercise")
-        third_sec_exercise = request.POST.getlist("third_sec_exercise")
-        fourth_max_exercise = request.POST.getlist("fourth_max_exercise")
-        fourth_sec_exercise = request.POST.getlist("fourth_sec_exercise")
-
-        # now validate the user's input
-        if not any([first_max_exercise, first_sec_exercise, second_max_exercise, second_sec_exercise, third_max_exercise, third_sec_exercise, fourth_max_exercise, fourth_sec_exercise]):
-            # all lists are empty, which means the user didn't select a single exercise
-            setup = workout_configurator(days)
-            setup["error"] = "You didnt' select an exercise."
-            return render(request, "userprofile/configure.html", setup)
-
-        elif not all([workout_validator(days, first_max_exercise, first_sec_exercise), workout_validator(days, second_max_exercise, second_sec_exercise), 
-                    workout_validator(days, third_max_exercise, third_sec_exercise), workout_validator(days, fourth_max_exercise, fourth_sec_exercise)]):
-            # make form validations to ensure the user decided everytime between max and sec exercise
-            setup = workout_configurator(days)
-            setup["error"] = "Choose between primary and accessory for each exercise."
-            return render(request, "userprofile/configure.html", setup)
-
-        # all configurations passed! Now build up the complete workout.
-        else:
-            """ Global variables for a macrocycle """
-            # get all currently existing cycles and increment the highest/latest by 1 to start a new cycle
-            previous_cycles = WorkoutPlan.objects.filter(user_id=request.user)
-            if previous_cycles:
-                retrieve_unique_cycles = list(set([int(cycle.cycle_name[5:]) for cycle in previous_cycles]))
-                cycle_name = "cycle" + str(max(retrieve_unique_cycles) + 1)
-            else:
-                cycle_name = "cycle1"
-
-            timestamp = date.today()
-            day_count = 1
-            week_count = 1
-            """ ------------------------------- """
-
-            def selected_exercises(max, sec):
-                # Determine whether the user selected a max exercise or a secondary exercise per row per day
-                # Using the primary key from POST, search for the selected exercise in the corresponding table/model
-                if max:
-                    exercise = MaxValue.objects.get(pk = max)
-                    return {"exercise" : exercise.exercise, "exercise_weight" : float(exercise.max_value)*0.70}
-                elif sec:
-                    exercise = Exercise_Pool.objects.get(pk = sec)
-                    return {"exercise" : exercise.title, "exercise_weight" : exercise.high_range}
-                else:
-                    return {"exercise" : "", "exercise_weight" : 0.00}
-                
-            # loop over 1 week in the entire macrocycle
-            for day in range(days):
-                # Currently, POST data is stored in a list. Each index = 1 day
-                exercise_1 = selected_exercises(first_max_exercise[day], second_max_exercise[day])
-                exercise_2 = selected_exercises(second_max_exercise[day], second_sec_exercise[day])
-                exercise_3 = selected_exercises(third_max_exercise[day], third_sec_exercise[day])
-                exercise_4 = selected_exercises(fourth_max_exercise[day], fourth_sec_exercise[day])
-
-                workout = WorkoutPlan(
-                    user_id = request.user,
-                    cycle_name = cycle_name,
-                    week_count = week_count,
-                    day_count = day_count,
-                    exercise_1 = exercise_1["exercise"],
-                    exercise_1_weight = exercise_1["exercise_weight"],
-                    exercise_2 = exercise_2["exercise"], 
-                    exercise_2_weight = exercise_2["exercise_weight"],
-                    exercise_3 = exercise_3["exercise"], 
-                    exercise_3_weight = exercise_3["exercise_weight"],
-                    exercise_4 = exercise_4["exercise"], 
-                    exercise_4_weight = exercise_4["exercise_weight"],
-                    timestamp = timestamp
-                    )
-                workout.save()
-                day_count += 1
-
-            # better: direct the user to his newly created workout!
-            return workout(request, cycle_name)
-            # return redirect("profile")
-
 def workout(request, cycle):
     if request.method == "GET":
         workout = get_list_or_404(WorkoutPlan, cycle_name=cycle, user_id=request.user) #filter the model based on URL snippet
@@ -290,6 +190,109 @@ def workout(request, cycle):
 
         workout = get_list_or_404(WorkoutPlan, cycle_name=cycle, user_id=request.user) #filter the model based on URL snippet
         return render(request, "userprofile/workout.html", {"workout" : workout, "cycle" : cycle})
+    
+    else:
+        workout = get_list_or_404(WorkoutPlan, cycle_name=cycle, user_id=request.user) #filter the model based on URL snippet
+        return render(request, "userprofile/workout.html", {"workout" : workout, "cycle" : cycle})
+
+
+
+def configure(request):
+    if request.method == "GET":
+        return render(request, "userprofile/configure.html")
+
+    elif "exercises_confirmed" in request.POST:
+        return render(request, "userprofile/configure.html", {"step_1" : True})
+    
+    elif "day_amount" in request.POST:
+        days = int(request.POST["days"])
+        return render(request, "userprofile/configure.html", workout_configurator(days))
+
+    elif "configuration_completed" in request.POST:
+        days = int(request.POST["days"])
+        print(request.POST)
+
+        # retrieve all the selected exercises from the post data. values are stored in a list, each index = 1 day
+        first_max_exercise = request.POST.getlist("first_max_exercise")
+        print(first_max_exercise)
+
+        first_sec_exercise = request.POST.getlist("first_sec_exercise")
+        second_max_exercise = request.POST.getlist("second_max_exercise")
+        second_sec_exercise = request.POST.getlist("second_sec_exercise")
+        third_max_exercise = request.POST.getlist("third_max_exercise")
+        third_sec_exercise = request.POST.getlist("third_sec_exercise")
+        fourth_max_exercise = request.POST.getlist("fourth_max_exercise")
+        fourth_sec_exercise = request.POST.getlist("fourth_sec_exercise")
+
+        # now validate the user's input
+        if not check_input([first_max_exercise, first_sec_exercise, second_max_exercise, second_sec_exercise, third_max_exercise, third_sec_exercise, fourth_max_exercise, fourth_sec_exercise]):
+            # all lists are empty, which means the user didn't select a single exercise
+            setup = workout_configurator(days)
+            setup["error"] = "You didnt' select an exercise."
+            return render(request, "userprofile/configure.html", setup)
+
+        elif not all([workout_validator(days, first_max_exercise, first_sec_exercise), workout_validator(days, second_max_exercise, second_sec_exercise), 
+                    workout_validator(days, third_max_exercise, third_sec_exercise), workout_validator(days, fourth_max_exercise, fourth_sec_exercise)]):
+            # make form validations to ensure the user decided everytime between max and sec exercise
+            setup = workout_configurator(days)
+            setup["error"] = "Choose between primary and accessory for each exercise."
+            return render(request, "userprofile/configure.html", setup)
+
+        # all configurations passed! Now build up the complete workout.
+        else:
+            """ Global variables for a macrocycle """
+            # get all currently existing cycles and increment the highest/latest by 1 to start a new cycle
+            previous_cycles = WorkoutPlan.objects.filter(user_id=request.user)
+            if previous_cycles:
+                retrieve_unique_cycles = list(set([int(cycle.cycle_name[5:]) for cycle in previous_cycles]))
+                cycle_name = "cycle" + str(max(retrieve_unique_cycles) + 1)
+            else:
+                cycle_name = "cycle1"
+
+            timestamp = date.today()
+            day_count = 1
+            week_count = 1
+            """ ------------------------------- """
+
+            def selected_exercises(max, sec):
+                # Determine whether the user selected a max exercise or a secondary exercise per row per day
+                # Using the primary key from POST, search for the selected exercise in the corresponding table/model
+                if max:
+                    exercise = MaxValue.objects.get(pk = max)
+                    return {"exercise" : exercise.exercise, "exercise_weight" : float(exercise.max_value)*0.70}
+                elif sec:
+                    exercise = Exercise_Pool.objects.get(pk = sec)
+                    return {"exercise" : exercise.title, "exercise_weight" : exercise.high_range}
+                else:
+                    return {"exercise" : "", "exercise_weight" : 0.00}
+                
+            # loop over 1 week in the entire macrocycle
+            for day in range(days):
+                # Currently, POST data is stored in a list. Each index = 1 day
+                exercise_1 = selected_exercises(first_max_exercise[day], first_sec_exercise[day])
+                exercise_2 = selected_exercises(second_max_exercise[day], second_sec_exercise[day])
+                exercise_3 = selected_exercises(third_max_exercise[day], third_sec_exercise[day])
+                exercise_4 = selected_exercises(fourth_max_exercise[day], fourth_sec_exercise[day])
+
+                cycle = WorkoutPlan(
+                    user_id = request.user,
+                    cycle_name = cycle_name,
+                    week_count = week_count,
+                    day_count = day_count,
+                    exercise_1 = exercise_1["exercise"],
+                    exercise_1_weight = exercise_1["exercise_weight"],
+                    exercise_2 = exercise_2["exercise"], 
+                    exercise_2_weight = exercise_2["exercise_weight"],
+                    exercise_3 = exercise_3["exercise"], 
+                    exercise_3_weight = exercise_3["exercise_weight"],
+                    exercise_4 = exercise_4["exercise"], 
+                    exercise_4_weight = exercise_4["exercise_weight"],
+                    timestamp = timestamp
+                    )
+                cycle.save()
+                day_count += 1
+
+            return render(request, "userprofile/configure.html", {"step_3" : True, "cycle_name" : cycle_name})
 
 
 def contact(request):
