@@ -11,7 +11,7 @@ from django.contrib.auth import login, logout, authenticate
 
 # database tables
 from .models import MaxValue, Exercise_Pool, musclegroups, WorkoutPlan
-from .forms import CreateMaxValue, Exercise_Pool_Form, ConfigureWorkout
+from .forms import CreateMaxValue, Exercise_Pool_Form, ConfigureWorkout, AchievedReps
 from .helpers import epley, check_input, workout_validator, workout_configurator, selected_exercises
 
 def startpage(request):
@@ -157,38 +157,10 @@ def workout(request, cycle):
         # reminder: 1 entry in WorkoutPlan table = 1 day of training
         todays_workout = get_object_or_404(WorkoutPlan, cycle_name=cycle, user_id=request.user, day_count=request.POST["day"])
 
-        # retrieve all achieved reps per sets per exercise from POST and update table
-        ### use a modelform instead? ###
-        if "exercise_1" in request.POST:
-            sets_exercise_1 = request.POST.getlist("exercise_1")
-            todays_workout.exercise_1_set_1 = sets_exercise_1[0]
-            todays_workout.exercise_1_set_2 = sets_exercise_1[1]
-            todays_workout.exercise_1_set_3 = sets_exercise_1[2]
-            todays_workout.exercise_1_set_4 = sets_exercise_1[3]
-        
-        if "exercise_2" in request.POST:
-            sets_exercise_2 = request.POST.getlist("exercise_2")
-            todays_workout.exercise_2_set_1 = sets_exercise_2[0]
-            todays_workout.exercise_2_set_2 = sets_exercise_2[1]
-            todays_workout.exercise_2_set_3 = sets_exercise_2[2]
-            todays_workout.exercise_2_set_4 = sets_exercise_2[3]
-
-        if "exercise_3" in request.POST:
-            sets_exercise_3 = request.POST.getlist("exercise_1")
-            todays_workout.exercise_3_set_1 = sets_exercise_3[0]
-            todays_workout.exercise_3_set_2 = sets_exercise_3[1]
-            todays_workout.exercise_3_set_3 = sets_exercise_3[2]
-            todays_workout.exercise_3_set_4 = sets_exercise_3[3]
-
-        if "exercise_4" in request.POST:
-            sets_exercise_4 = request.POST.getlist("exercise_1")
-            todays_workout.exercise_4_set_1 = sets_exercise_4[0]
-            todays_workout.exercise_4_set_2 = sets_exercise_4[1]
-            todays_workout.exercise_4_set_3 = sets_exercise_4[2]
-            todays_workout.exercise_4_set_4 = sets_exercise_4[3]
-
-        todays_workout.day_completed = True
-        todays_workout.save()
+        achieved_reps = AchievedReps(request.POST, instance=todays_workout)
+        save_achieved_reps = achieved_reps.save(commit=False) # this step is important in order to additionally update the boolean value in table
+        save_achieved_reps.day_completed = True
+        save_achieved_reps.save()
 
         workout = get_list_or_404(WorkoutPlan, cycle_name=cycle, user_id=request.user) #filter the model based on URL snippet
         created_at = [entry.timestamp for entry in workout]  # retrieves date from current cycle

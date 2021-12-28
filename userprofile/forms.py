@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import MaxValue, Exercise_Pool
+from .models import MaxValue, Exercise_Pool, WorkoutPlan
 from django.core.exceptions import ValidationError
 
 class Exercise_Pool_Form(ModelForm):
@@ -24,3 +24,11 @@ class ConfigureWorkout(forms.Form):
     third_sec_exercise = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.all(), required=False)
     fourth_max_exercise = forms.ModelChoiceField(empty_label="select", queryset=MaxValue.objects.all(), required=False) 
     fourth_sec_exercise = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.all(), required=False)
+
+class AchievedReps(ModelForm):
+    class Meta:
+        model = WorkoutPlan
+        fields = ["exercise_1_set_1", "exercise_1_set_2", "exercise_1_set_3", "exercise_1_set_4",
+        "exercise_2_set_1", "exercise_2_set_2", "exercise_2_set_3", "exercise_2_set_4",
+        "exercise_3_set_1", "exercise_3_set_2", "exercise_3_set_3", "exercise_3_set_4",
+        "exercise_4_set_1", "exercise_4_set_2", "exercise_4_set_3", "exercise_4_set_4"]
