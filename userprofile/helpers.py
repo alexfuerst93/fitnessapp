@@ -1,4 +1,5 @@
 from .forms import ConfigureWorkout
+from .models import MaxValue, Exercise_Pool
 
 def epley(weight, reps):
     # calculates a new 1RM value
@@ -7,6 +8,7 @@ def epley(weight, reps):
 
 def check_input(summed_request):
     # summed_request is a list with nested lists inside, corresponding to the selected exercises
+    # loops through the request, checking that at least 1 exercise is selected
     for request in summed_request:
         for val in request:
             if val:
@@ -71,3 +73,21 @@ def workout_configurator(days):
             "configure_workout_day4" : configure_workout_day4,
             "configure_workout_day5" : configure_workout_day5
         }
+
+
+def selected_exercises(max, sec, weight_max, weight_sec):
+    # Determine whether the user selected a max exercise or a secondary exercise per row per day
+    # Using the primary key from POST, search for the selected exercise in the corresponding table/model
+    if max:
+        exercise = MaxValue.objects.get(pk = max)
+        return {"exercise" : exercise.exercise, "exercise_weight" : float(exercise.max_value)*weight_max}
+    elif sec:
+        exercise = Exercise_Pool.objects.get(pk = sec)
+        if weight_sec == "high":
+            return {"exercise" : exercise.title, "exercise_weight" : exercise.high_range}
+        elif weight_sec == "mid":
+            return {"exercise" : exercise.title, "exercise_weight" : exercise.mid_range}
+        else: # weight_sec == "low"
+            return {"exercise" : exercise.title, "exercise_weight" : exercise.low_range}
+    else:
+        return {"exercise" : "", "exercise_weight" : 0.00}

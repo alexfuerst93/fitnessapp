@@ -12,7 +12,7 @@ from django.contrib.auth import login, logout, authenticate
 # database tables
 from .models import MaxValue, Exercise_Pool, musclegroups, WorkoutPlan
 from .forms import CreateMaxValue, Exercise_Pool_Form, ConfigureWorkout
-from .helpers import epley, check_input, workout_validator, workout_configurator
+from .helpers import epley, check_input, workout_validator, workout_configurator, selected_exercises
 
 def startpage(request):
     if request.method == "GET":
@@ -145,9 +145,13 @@ def loginuser(request):
 
 
 def workout(request, cycle):
+    # this is a list of deload weeks, in order to identify them in the template
+    weeks = [4, 8, 12, 16]
+
     if request.method == "GET":
         workout = get_list_or_404(WorkoutPlan, cycle_name=cycle, user_id=request.user) #filter the model based on URL snippet
-        return render(request, "userprofile/workout.html", {"workout" : workout, "cycle" : cycle})
+        created_at = [entry.timestamp for entry in workout]  # retrieves date from current cycle
+        return render(request, "userprofile/workout.html", {"workout" : workout, "cycle" : cycle, "weeks" : weeks, "created_at" : created_at[0]})
 
     elif "workout_done" in request.POST:
         print(request.POST)
@@ -189,12 +193,8 @@ def workout(request, cycle):
         todays_workout.save()
 
         workout = get_list_or_404(WorkoutPlan, cycle_name=cycle, user_id=request.user) #filter the model based on URL snippet
-        return render(request, "userprofile/workout.html", {"workout" : workout, "cycle" : cycle})
-    
-    else:
-        workout = get_list_or_404(WorkoutPlan, cycle_name=cycle, user_id=request.user) #filter the model based on URL snippet
-        return render(request, "userprofile/workout.html", {"workout" : workout, "cycle" : cycle})
-
+        created_at = [entry.timestamp for entry in workout]  # retrieves date from current cycle
+        return render(request, "userprofile/workout.html", {"workout" : workout, "cycle" : cycle, "weeks" : weeks, "created_at" : created_at[0]})
 
 
 def configure(request):
@@ -252,45 +252,53 @@ def configure(request):
             timestamp = date.today()
             day_count = 1
             week_count = 1
+
+            # every week the weights for primary exercises go up
+            weight_max = [0.70, 0.75, 0.80, 0.80, 0.75, 0.80, 0.85, 0.85, 0.80, 0.85, 0.90, 0.90, 0.85, 0.90, 0.95, 0.50]
+            weight_max_pointer = 0
+
+            # every mesocycle the weights for secondary exercises go up
+            weight_sec = ["high", "mid", "mid", "low"]
+            weight_sec_pointer = 0
             """ ------------------------------- """
+            
+            for month in range(4):
+            # loop over entire macrocycle
+                for week in range(4):
+                # loop over 1 month, which is one mesocycle
+                    for day in range(days):
+                    # loop over 1 week, which is one microcycle
+                        # Currently, POST data is stored in a list. Each index = 1 day
+                        exercise_1 = selected_exercises(first_max_exercise[day], first_sec_exercise[day], weight_max[weight_max_pointer], weight_sec[weight_sec_pointer])
+                        exercise_2 = selected_exercises(second_max_exercise[day], second_sec_exercise[day], weight_max[weight_max_pointer], weight_sec[weight_sec_pointer])
+                        exercise_3 = selected_exercises(third_max_exercise[day], third_sec_exercise[day], weight_max[weight_max_pointer], weight_sec[weight_sec_pointer])
+                        exercise_4 = selected_exercises(fourth_max_exercise[day], fourth_sec_exercise[day], weight_max[weight_max_pointer], weight_sec[weight_sec_pointer])
 
-            def selected_exercises(max, sec):
-                # Determine whether the user selected a max exercise or a secondary exercise per row per day
-                # Using the primary key from POST, search for the selected exercise in the corresponding table/model
-                if max:
-                    exercise = MaxValue.objects.get(pk = max)
-                    return {"exercise" : exercise.exercise, "exercise_weight" : float(exercise.max_value)*0.70}
-                elif sec:
-                    exercise = Exercise_Pool.objects.get(pk = sec)
-                    return {"exercise" : exercise.title, "exercise_weight" : exercise.high_range}
-                else:
-                    return {"exercise" : "", "exercise_weight" : 0.00}
+                        cycle = WorkoutPlan(
+                            user_id = request.user,
+                            cycle_name = cycle_name,
+                            week_count = week_count,
+                            day_count = day_count,
+                            max_weight_percentage = int(weight_max[weight_max_pointer] * 100),
+                            exercise_1 = exercise_1["exercise"],
+                            exercise_1_weight = exercise_1["exercise_weight"],
+                            exercise_2 = exercise_2["exercise"], 
+                            exercise_2_weight = exercise_2["exercise_weight"],
+                            exercise_3 = exercise_3["exercise"], 
+                            exercise_3_weight = exercise_3["exercise_weight"],
+                            exercise_4 = exercise_4["exercise"], 
+                            exercise_4_weight = exercise_4["exercise_weight"],
+                            timestamp = timestamp
+                            )
+                        cycle.save()
+                        day_count += 1
                 
-            # loop over 1 week in the entire macrocycle
-            for day in range(days):
-                # Currently, POST data is stored in a list. Each index = 1 day
-                exercise_1 = selected_exercises(first_max_exercise[day], first_sec_exercise[day])
-                exercise_2 = selected_exercises(second_max_exercise[day], second_sec_exercise[day])
-                exercise_3 = selected_exercises(third_max_exercise[day], third_sec_exercise[day])
-                exercise_4 = selected_exercises(fourth_max_exercise[day], fourth_sec_exercise[day])
+                    # inner loop is over = 1 week of workouts
+                    week_count += 1
+                    weight_max_pointer += 1
 
-                cycle = WorkoutPlan(
-                    user_id = request.user,
-                    cycle_name = cycle_name,
-                    week_count = week_count,
-                    day_count = day_count,
-                    exercise_1 = exercise_1["exercise"],
-                    exercise_1_weight = exercise_1["exercise_weight"],
-                    exercise_2 = exercise_2["exercise"], 
-                    exercise_2_weight = exercise_2["exercise_weight"],
-                    exercise_3 = exercise_3["exercise"], 
-                    exercise_3_weight = exercise_3["exercise_weight"],
-                    exercise_4 = exercise_4["exercise"], 
-                    exercise_4_weight = exercise_4["exercise_weight"],
-                    timestamp = timestamp
-                    )
-                cycle.save()
-                day_count += 1
+                # this loop is over = 1 month of workouts
+                weight_sec_pointer += 1
 
             return render(request, "userprofile/success.html", {"cycle_name" : cycle_name})
 

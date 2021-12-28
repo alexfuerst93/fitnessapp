@@ -9,6 +9,9 @@ from django.test import TestCase
 # else:
 #     print("false")
 
-test_list = ["", "", ""]
-print(test_list)
-print(test_list[0])
+# test_list = ["", "", ""]
+# print(test_list)
+# print(test_list[0])
+
+weeks = [week for week in range(16)]
+print(weeks)

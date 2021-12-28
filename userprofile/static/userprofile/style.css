@@ -34,3 +34,12 @@ img {
 hr {
     border: 1px solid white;
 }
+
+.reps {
+    width: 2.3em;
+    height: 1.8em;
+}
+
+.footnote {
+    font-size: 0.85em;
+}
