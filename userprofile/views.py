@@ -48,7 +48,7 @@ def profile(request):
     current_cycle = max(all_cycles)
 
     # filters model to only contain unique cycle+timestamp combinations
-    cycles = WorkoutPlan.objects.filter(user_id=request.user).values("cycle_name", "timestamp").order_by("-cycle_name").distinct()
+    cycles = WorkoutPlan.objects.filter(user_id=request.user).values("cycle_name", "timestamp").order_by("-timestamp").distinct()
 
     render_dict = {
         "maxvals" : max_vals, "exercises" : exercises,

@@ -133,7 +133,7 @@
 
 <h2>View all your past macrocycles</h3>
 {% for cycle in cycles %}
-<a href="{% url 'workout' cycle.cycle_name %}" class="btn btn-success">
+<a href="{% url 'workout' cycle.cycle_name %}" class="btn btn-success m-1">
     <p><b>{{ cycle.cycle_name|capfirst }}</b><br>{{ cycle.timestamp|date:"d.m.Y" }}</p>
 </a>
 {% endfor %}
