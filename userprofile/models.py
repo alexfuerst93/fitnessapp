@@ -30,9 +30,9 @@ class Exercise_Pool(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField("Name of Exercise", max_length=100)
     muscle = models.CharField("Name of Musclegroup", max_length=50, choices=musclegroups, default="chest")
-    high_range = models.PositiveIntegerField(blank=True, default=0, validators=[MinValueValidator(1)]) #weight
-    mid_range = models.PositiveIntegerField(blank=True, default=0, validators=[MinValueValidator(1)]) #weight
-    low_range = models.PositiveIntegerField(blank=True, default=0, validators=[MinValueValidator(1)]) #weight
+    high_range = models.PositiveIntegerField(blank=True, default=0, validators=[MinValueValidator(0)]) #weight
+    mid_range = models.PositiveIntegerField(blank=True, default=0, validators=[MinValueValidator(0)]) #weight
+    low_range = models.PositiveIntegerField(blank=True, default=0, validators=[MinValueValidator(0)]) #weight
     
     def __str__(self):
         return self.title

@@ -95,40 +95,44 @@
 <p>Create some exercises to build your workout!</p>
 {% endif %}
 
-<div class="row">
 {% for musclegroup in musclegroups %}
-    <div class="col-3 p-3 m-3 overview_exercises">
-    <h3>{{ musclegroup }}</h3>
+
+    <div class="row">
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#{{ musclegroup }}" aria-expanded="true" aria-controls="{{ musclegroup }}">{{ musclegroup }}</button>
+    </div>
+
+    <div class="row overview_exercises collapse show" id="{{ musclegroup }}">
     {% for exercise in exercises %}
         {% if exercise.muscle == musclegroup %}
-        <hr>
-        <div class="row px-3">
-            <div class="col"><b>{{ exercise.title }}</b><br>
-            High: {% if exercise.high_range %} {{ exercise.high_range }} KG {% else %} 0 KG {% endif %} |
-            Mid: {% if exercise.mid_range %} {{ exercise.mid_range }} KG {% else %} 0 KG {% endif %} |
-            Low: {% if exercise.low_range %} {{ exercise.low_range }} {% else %} 0 KG {% endif %}</div>
-            <form action="{% url 'profile' %}" method="POST">
+
+
+        <div class="col-4 card card-body">
+            <form action="{% url 'profile' %}" class="form-inline" method="POST">
                 {% csrf_token %}
                 <div class="form-row">
-                    <div class="form-group col-xs-6">{{ form.title.label_tag }} {{ form.title }}</div>
-                    <div class="form-group col-xs-6">{{ form.muscle.label_tag}} {{ form.muscle }}</div>
+                    <input type="text" name="title" value="{{ exercise.title }}" maxlength="100" required>
+                    <select name="muscle">
+                        <option value="{{ exercise.muscle }}" selected>{{ exercise.muscle }}</option>
+                        {% for muscle in musclegroups %}
+                        {% if muscle != exercise.muscle %}<option value="{{ muscle }}">{{ muscle }}</option>{% endif %}
+                        {% endfor %}
+                    </select>
+                    <input type="number" min="1" max="999" name="high_range" value="{{ exercise.high_range }}">
+                    <input type="number" min="1" max="999" name="mid_range" value="{{ exercise.mid_range }}">
+                    <input type="number" min="1" max="999" name="low_range" value="{{ exercise.low_range }}">
                     <input type="hidden" name="{{ exercise.id }}">
+                    <button class="btn btn-outline-light" name="modified_exercise" value="{{ exercise.id }}">Mod</button>
+                    <button class="btn btn-outline-light" name="deleted_exercise" value="{{ exercise.id }}">Del</button>
                 </div>
-        </div> 
-            <div class="row px-3 justify-content-between">
-                <button class="btn btn-outline-light col-3" name="modified_exercise">Mod</button>
-                </form>
-                <form action="{% url 'profile' %}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="{{ exercise.id }}">
-                    <button class="btn btn-outline-light col" name="deleted_exercise">Del</button>
-                </form>
-            </div>
+            </form>
+        </div>
+
+
         {% endif %}
     {% endfor %}
     </div>
-{% endfor %}
-</div>
+
+    {% endfor %}
 
 
 <h2>View all your past macrocycles</h3>

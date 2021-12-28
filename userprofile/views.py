@@ -52,7 +52,7 @@ def profile(request):
 
     render_dict = {
         "maxvals" : max_vals, "exercises" : exercises,
-        "form_maxval" : form_maxval, "form" : add_exercise, 
+        "form_maxval" : form_maxval, "form" : add_exercise,
         "musclegroups" : sorted_musclegroups,
         "cycles" : cycles,
         "current_cycle" : current_cycle
@@ -114,14 +114,12 @@ def profile(request):
 
     elif "deleted_exercise" in request.POST:
         print(request.POST)
-        pk = [key for key in request.POST.keys()]
-        Exercise_Pool.objects.get(id = pk[1]).delete()
+        Exercise_Pool.objects.get(id = request.POST["deleted_exercise"]).delete()
         return redirect("profile")
 
     elif "modified_exercise" in request.POST:
         print(request.POST)
-        pk = [key for key in request.POST.keys()]
-        form_modify_exercise = Exercise_Pool.objects.get(id = pk[3]) # retrieve ID from model
+        form_modify_exercise = Exercise_Pool.objects.get(id = request.POST["modified_exercise"]) # retrieve ID from model
         modified_exercise = Exercise_Pool_Form(request.POST, instance=form_modify_exercise) # create instance of that entry and plug it into the form
         modified_exercise.save() # update the model form based on POST data
         return redirect("profile")
