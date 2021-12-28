@@ -73,7 +73,7 @@
 </div>
 
 <h2>Manage your secondary exercises</h2>
-<form action="{% url 'profile' %}" method="POST" class="p-3" id="sec_exercise">
+<form action="{% url 'profile' %}" method="POST" class="p-3 sec_exercise">
     {% csrf_token %}
     <div class="form-row">
         <div class="form-group col-6">{{ form.title.label_tag }} {{ form.title }}</div>
@@ -97,11 +97,12 @@
 
 {% for musclegroup in musclegroups %}
 
-    <div class="row">
-    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#{{ musclegroup }}" aria-expanded="true" aria-controls="{{ musclegroup }}">{{ musclegroup }}</button>
+    <div class="row mt-3 mx-0 rounded">
+        <a class="btn btn-success btn-block" data-toggle="collapse" data-target="#{{ musclegroup }}" aria-expanded="true" aria-controls="{{ musclegroup }}">
+            <div class="col p-1 text-white">{{ musclegroup|title }} [ICON]</div></a>
     </div>
 
-    <div class="row overview_exercises collapse show" id="{{ musclegroup }}">
+    <div class="row mx-0 rounded sec_exercise collapse show" id="{{ musclegroup }}">
     {% for exercise in exercises %}
         {% if exercise.muscle == musclegroup %}
 
