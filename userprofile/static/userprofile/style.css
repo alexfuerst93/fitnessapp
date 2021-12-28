@@ -32,12 +32,17 @@ img {
 }
 
 hr {
-    border: 1px solid white;
+    border: 2px solid #e0ffe7;
 }
 
 .reps {
     width: 2.3em;
     height: 1.8em;
+}
+
+.sec_ranges {
+    width: 3em;
+    height: 2em;
 }
 
 .footnote {

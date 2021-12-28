@@ -102,32 +102,40 @@
             <div class="col p-1 text-white">{{ musclegroup|title }} [ICON]</div></a>
     </div>
 
-    <div class="row mx-0 rounded sec_exercise collapse show" id="{{ musclegroup }}">
+    <div class="row mx-0 justify-content-around rounded sec_exercise collapse show" id="{{ musclegroup }}">
     {% for exercise in exercises %}
         {% if exercise.muscle == musclegroup %}
 
-
-        <div class="col-4 card card-body">
+        <div class="col-3 card card-body m-3 shadow-sm">
             <form action="{% url 'profile' %}" class="form-inline" method="POST">
                 {% csrf_token %}
                 <div class="form-row">
-                    <input type="text" name="title" value="{{ exercise.title }}" maxlength="100" required>
-                    <select name="muscle">
-                        <option value="{{ exercise.muscle }}" selected>{{ exercise.muscle }}</option>
-                        {% for muscle in musclegroups %}
-                        {% if muscle != exercise.muscle %}<option value="{{ muscle }}">{{ muscle }}</option>{% endif %}
-                        {% endfor %}
-                    </select>
-                    <input type="number" min="1" max="999" name="high_range" value="{{ exercise.high_range }}">
-                    <input type="number" min="1" max="999" name="mid_range" value="{{ exercise.mid_range }}">
-                    <input type="number" min="1" max="999" name="low_range" value="{{ exercise.low_range }}">
-                    <input type="hidden" name="{{ exercise.id }}">
-                    <button class="btn btn-outline-light" name="modified_exercise" value="{{ exercise.id }}">Mod</button>
-                    <button class="btn btn-outline-light" name="deleted_exercise" value="{{ exercise.id }}">Del</button>
+                    <p class="m-0"><b>{{ exercise.title }}</b></p>
+                    <hr class="col-10 m-3">
+
+                    <div class="row">
+                        <div class="col mb-2 ml-2"><input class="text-secondary" type="text" name="title" value="{{ exercise.title }}" maxlength="100" required></div>
+                        <div class="col mt-1 ml-2"><select class="text-secondary" name="muscle">
+                            <option value="{{ exercise.muscle }}" selected>{{ exercise.muscle }}</option>
+                            {% for muscle in musclegroups %}
+                            {% if muscle != exercise.muscle %}<option value="{{ muscle }}">{{ muscle }}</option>{% endif %}
+                            {% endfor %}
+                        </select></div>
+                    </div>
+                    <div class="row mx-0 my-2 p-0">
+                        <div class="col"><label for="high">High:</label><input class="text-secondary sec_ranges" type="number" min="0" max="999" name="high_range" id="high" value="{{ exercise.high_range }}"></div>
+                        <div class="col"><label for="mid">Mid:</label><input class="text-secondary sec_ranges" type="number" min="0" max="999" name="mid_range" id="mid" value="{{ exercise.mid_range }}"></div>
+                        <div class="col"><label for="low">Low:</label><input class="text-secondary sec_ranges" type="number" min="0" max="999" name="low_range" id="low" value="{{ exercise.low_range }}"></div>
+                    </div>
+                    <hr class="col-10 m-3">
+                    <div class="row mx-0 justify-content-between">
+                        <div class="col-1"><button class="btn btn-outline-success" name="modified_exercise" value="{{ exercise.id }}">Mod</button></div>
+                        <div class="col-1"><button class="btn btn-outline-success" name="deleted_exercise" value="{{ exercise.id }}">Del</button></div>
+                    </div>
+
                 </div>
             </form>
         </div>
-
 
         {% endif %}
     {% endfor %}
@@ -136,10 +144,10 @@
     {% endfor %}
 
 
-<h2>View all your past macrocycles</h3>
+<h2 class="my-3">View all your past macrocycles</h3>
 {% for cycle in cycles %}
-<a href="{% url 'workout' cycle.cycle_name %}" class="btn btn-success m-1">
-    <p><b>{{ cycle.cycle_name|capfirst }}</b><br>{{ cycle.timestamp|date:"d.m.Y" }}</p>
+<a href="{% url 'workout' cycle.cycle_name %}" class="btn btn-outline-secondary m-1">
+    <p class="m-1"><b>{{ cycle.cycle_name|capfirst }}</b><br>{{ cycle.timestamp|date:"d.m.Y" }}</p>
 </a>
 {% endfor %}
 
