@@ -1,68 +1,71 @@
 {% extends 'userprofile/base.html' %}
 {% block content %}
 
-<div class="container">
+<div class="container px-1">
     
     <div class="row justify-content-center">
-        <h1>This is your very own profile!</h1>
+        <h1 class="m-3">Welcome to your profile</h1>
     </div>
     <br>
     
+    <!-- Add conditionals: No single exercise? Then no button appears! 
+    Not a single macrocycle? Now continue appears! 
+    Display info message instead with [ICON]-->
     <a href="{% url 'workout' current_cycle %}" class="btn btn-success">Continue your current workout!</a>
     <a href="{% url 'configure' %}" class="btn btn-primary">Configure your next macrocycle!</a>
     <br>
 
     
-<br>
-<h2>Calculate your Max Rep</h2>
+<div class="my-5"></div>
+<h2 class="mx-3">Manage your primary Exercises</h2>
+{% if error %}
+<p class="bg-danger p-3 text-white">[ICON]<b>{{ error }}</b></p>
+{% endif %}
+{% if ergebnis %}
+<p class="bg-success p-3 text-white">[ICON]<b>{{ ergebnis }}</b></p>
+{% endif %}
 <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item"><a class="nav-link active" id="calculate-tab" data-toggle="tab" href="#tab1" role="tab">Calculate</a></li>
-    <li class="nav-item"><a class="nav-link" id="add-new-max-tab" data-toggle="tab" href="#tab2" role="tab">Add new Max Value</a></li>
+    <li class="nav-item"><a class="nav-link" id="add-new-max-tab" data-toggle="tab" href="#tab2" role="tab">Add new 1RM</a></li>
 </ul>
 <div class="tab-content">
     <div class="tab-pane fade show active p-3" id="tab1" role="tabpanel">
-        <form action="{% url 'profile' %}" method="POST">
+        <form action="{% url 'profile' %}" class="form-inline" method="POST">
             {% csrf_token %}
-            <input type="number" step="0.01" placeholder="Weight", name="weight">
-            <input type="number" step="0.01" placeholder="Reps", name="reps">
-            <button name="calculated_maxrep">Calculate!</button>
+            <input class="form-control m-1" type="number" step="0.01" placeholder="Weight" name="weight" required>
+            <input class="form-control m-1" type="number" step="0.01" placeholder="Reps" name="reps" required>
+            <button class="btn btn-outline-primary m-3" name="calculated_maxrep">Calculate!</button>
         </form>
     </div>
     <div class="tab-pane fade p-3" id="tab2" role="tabpanel">
         <form action="{% url 'profile' %}" method="POST">
             {% csrf_token %}
             <div class="form-row">
-                <div class="form-group col-5">{{ form_maxval.choose_exercise.label_tag }} {{ form_maxval.choose_exercise }}</div>
-                <p class="col-1">or</p>
-                <div class="form-group col-5">{{ form_maxval.create_exercise.label_tag }} {{ form_maxval.create_exercise }}</div>
+                <div class="form-group col-11 col-md-4">{{ form_maxval.choose_exercise.label_tag }} {{ form_maxval.choose_exercise }}</div>
+                <p class="col-1 col-md-1"><b>or</b></p>
+                <div class="form-group col col-md-4">{{ form_maxval.create_exercise.label_tag }} {{ form_maxval.create_exercise }}</div>
             </div>
             <div class="form-row">
-                <div class="form-group col-6">{{ form_maxval.reps.label_tag }} {{ form_maxval.reps }}</div>
-                <div class="form-group col-6">{{ form_maxval.weight.label_tag }} {{ form_maxval.weight }}</div>
+                <div class="form-group col-6 col-md-4">{{ form_maxval.reps.label_tag }} {{ form_maxval.reps }}</div>
+                <div class="form-group col-6 col-md-4">{{ form_maxval.weight.label_tag }} {{ form_maxval.weight }}</div>
             </div>
-            <button name="calculate_and_safe" class="btn btn-primary">Add new Max Val Exercise!</button>
+            <button name="calculate_and_safe" class="btn btn-primary">Add new primary exercise!</button>
         </form>
     </div>
 </div>
-{% if error %}
-<p class="bg-danger p-3">{{ error }}</p>
-{% endif %}
-{% if ergebnis %}
-<p class="bg-success p-3">{{ ergebnis }}</p>
-{% endif %}
 
 
 <br>
-<h2>Your current Max-reps</h2>
+<h2 class="mx-3">Your current 1-rep Max</h2>
 
 {% if not maxvals %}
 <p>You currently don't have any max values set. Use the above calculator to add new exercises!</p>
 {% endif %}
 
-<div class="row">
+<div class="row justify-content-around">
 {% for maxval in maxvals %}
-    <div class="col-2 p-3 m-3 maxvals text-left">
-        <p><b>{{ maxval.exercise }}</b><br>Max Value: {{ maxval.max_value }} KG<br>{{ maxval.timestamp|date:"d.m.Y H:i" }}</p>
+    <div class="col-5 col-md-3 col-lg-2 p-3 m-1 maxvals text-left">
+        <p><b>{{ maxval.exercise }}</b><br>{{ maxval.max_value }} KG<br>{{ maxval.timestamp|date:"d.m.Y H:i" }}</p>
         <form action="{% url 'profile' %}" method="POST">
             {% csrf_token %}
             <input type="hidden" name="{{ maxval.id }}">
@@ -72,24 +75,25 @@
 {% endfor %}
 </div>
 
-<h2>Manage your secondary exercises</h2>
+<div class="my-5"></div>
+<h2 class="mx-3">Manage your secondary exercises</h2>
+{% if form_error %}
+<p class="bg-danger p-3 text-white"><b>[ICON] {{ form_error }}</b></p>
+{% endif %}
 <form action="{% url 'profile' %}" method="POST" class="p-3 sec_exercise">
     {% csrf_token %}
     <div class="form-row">
-        <div class="form-group col-6">{{ form.title.label_tag }} {{ form.title }}</div>
-        <div class="form-group col-6">{{ form.muscle.label_tag }} {{ form.muscle }}</div>
+        <div class="form-group col-7">{{ form.title.label_tag }} {{ form.title }}</div>
+        <div class="form-group col-5">{{ form.muscle.label_tag }} {{ form.muscle }}</div>
     </div>
-    <p>These fields are optional. However, you will need to provide your current weight to have them displayed in your workout plan:</p>
+    <p>Plug in the weight you can lift for <b>12 reps</b> (high), <b>10 reps</b> (mid) and <b>8 reps</b> (low).<br>Fields are optional, but having them displayed in your workout plan is recommended:</p>
     <div class="form-row">
-        <div class="form-group col">{{ form.high_range.label_tag }} {{ form.high_range }}</div>
-        <div class="form-group col">{{ form.mid_range.label_tag }} {{ form.mid_range }}</div>
-        <div class="form-group col">{{ form.low_range.label_tag }} {{ form.low_range }}</div>
+        <div class="col"><label for="high">High:</label><input class="mx-3 form-control sec_ranges" type="number" min="0" max="999" name="high_range" id="high"></div>
+        <div class="col"><label for="mid">Mid:</label><input class="mx-3 form-control sec_ranges" type="number" min="0" max="999" name="mid_range" id="mid"></div>
+        <div class="col"><label for="low">Low:</label><input class="mx-3 form-control sec_ranges" type="number" min="0" max="999" name="low_range" id="low"></div>
     </div>
-    <button class="btn btn-success" name="added_exercise">Add new secondary exercise</button>
+    <button class="btn btn-success mt-3" name="added_exercise">Add new secondary exercise</button>
 </form>
-{% if form_error %}
-<p class="bg-danger p-3">{{ form_error }}</p>
-{% endif %}
 
 {% if not exercises %}
 <p>Create some exercises to build your workout!</p>
@@ -102,20 +106,28 @@
             <div class="col p-1 text-white">{{ musclegroup|title }} [ICON]</div></a>
     </div>
 
-    <div class="row mx-0 justify-content-around rounded sec_exercise collapse show" id="{{ musclegroup }}">
     {% for exercise in exercises %}
         {% if exercise.muscle == musclegroup %}
+        <!-- makes a row for every exercise within a muscle group and opens a nested collapse -->
+        <div class="col-12 rounded sec_exercise collapse show" id="{{ musclegroup }}">
 
-        <div class="col-3 card card-body m-3 shadow-sm">
+
+
+        <div class="row mx-0 mb-2 rounded">
+            <a class="btn btn-default bg-light btn-block shadow-sm" data-toggle="collapse" data-target="#ex{{ exercise.id }}" aria-expanded="true" aria-controls="ex{{ exercise.id }}">
+                <div class="col p-1">{{ exercise.title }} [ICON]</div></a>
+        </div>
+    
+        <div class="row mx-0 mb-2 justify-content-around rounded sec_exercise collapse" id="ex{{ exercise.id }}">
+
+
+        <div class="col-md-6 col-lg-5 card card-body m-3 shadow-sm">
             <form action="{% url 'profile' %}" class="form-inline" method="POST">
                 {% csrf_token %}
                 <div class="form-row">
-                    <p class="m-0"><b>{{ exercise.title }}</b></p>
-                    <hr class="col-10 m-3">
-
                     <div class="row">
-                        <div class="col mb-2 ml-2"><input class="text-secondary" type="text" name="title" value="{{ exercise.title }}" maxlength="100" required></div>
-                        <div class="col mt-1 ml-2"><select class="text-secondary" name="muscle">
+                        <div class="col mb-2 ml-2"><input class="text-secondary form-control" type="text" name="title" value="{{ exercise.title }}" maxlength="100" required></div>
+                        <div class="col mt-1 ml-2"><select class="text-secondary form-control" name="muscle">
                             <option value="{{ exercise.muscle }}" selected>{{ exercise.muscle }}</option>
                             {% for muscle in musclegroups %}
                             {% if muscle != exercise.muscle %}<option value="{{ muscle }}">{{ muscle }}</option>{% endif %}
@@ -123,9 +135,9 @@
                         </select></div>
                     </div>
                     <div class="row mx-0 my-2 p-0">
-                        <div class="col"><label for="high">High:</label><input class="text-secondary sec_ranges" type="number" min="0" max="999" name="high_range" id="high" value="{{ exercise.high_range }}"></div>
-                        <div class="col"><label for="mid">Mid:</label><input class="text-secondary sec_ranges" type="number" min="0" max="999" name="mid_range" id="mid" value="{{ exercise.mid_range }}"></div>
-                        <div class="col"><label for="low">Low:</label><input class="text-secondary sec_ranges" type="number" min="0" max="999" name="low_range" id="low" value="{{ exercise.low_range }}"></div>
+                        <div class="col-4"><label for="high">High:</label><input class="text-secondary form-control sec_ranges" type="number" min="0" max="999" name="high_range" id="high" value="{{ exercise.high_range }}"></div>
+                        <div class="col-4"><label for="mid">Mid:</label><input class="text-secondary form-control sec_ranges" type="number" min="0" max="999" name="mid_range" id="mid" value="{{ exercise.mid_range }}"></div>
+                        <div class="col-4"><label for="low">Low:</label><input class="text-secondary form-control sec_ranges" type="number" min="0" max="999" name="low_range" id="low" value="{{ exercise.low_range }}"></div>
                     </div>
                     <hr class="col-10 m-3">
                     <div class="row mx-0 justify-content-between">
@@ -137,16 +149,18 @@
             </form>
         </div>
 
+        </div>
+
+        </div>
         {% endif %}
     {% endfor %}
-    </div>
 
     {% endfor %}
 
-
-<h2 class="my-3">View all your past macrocycles</h3>
+<div class="my-5"></div>
+<h2 class="m-3">View all your past macrocycles</h3>
 {% for cycle in cycles %}
-<a href="{% url 'workout' cycle.cycle_name %}" class="btn btn-outline-secondary m-1">
+<a href="{% url 'workout' cycle.cycle_name %}" class="btn btn-outline-secondary m-1 mb-3">
     <p class="m-1"><b>{{ cycle.cycle_name|capfirst }}</b><br>{{ cycle.timestamp|date:"d.m.Y" }}</p>
 </a>
 {% endfor %}

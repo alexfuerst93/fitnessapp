@@ -66,7 +66,7 @@ def profile(request):
     elif "calculated_maxrep" in request.POST:
         # form validations are missing
         result = epley(float(request.POST["weight"]), float(request.POST["reps"]))
-        render_dict["ergebnis"] = f"Your Max value: {result}"
+        render_dict["ergebnis"] = f"Your 1-rep Max: {result}"
         return render(request, "userprofile/profile.html", render_dict)
 
     elif "calculate_and_safe" in request.POST:

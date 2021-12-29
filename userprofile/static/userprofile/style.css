@@ -13,7 +13,7 @@ img {
     max-height: 25%;
 }
 
-#tab2 {
+#tab1, #tab2 {
     background-color: #e6f5ff;
 }
 
@@ -47,4 +47,9 @@ hr {
 
 .footnote {
     font-size: 0.8em;
+}
+
+#id_reps, #id_weight {
+    width: 4em;
+    height: 2em;
 }

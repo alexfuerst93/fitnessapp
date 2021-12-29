@@ -9,7 +9,7 @@ class Exercise_Pool_Form(ModelForm):
         fields = ["title", "muscle", "high_range", "mid_range", "low_range"]
 
 class CreateMaxValue(forms.Form):
-    choose_exercise = forms.ModelChoiceField(empty_label="select", label="Choose an existing exercise", queryset=MaxValue.objects.all(), required=False)
+    choose_exercise = forms.ModelChoiceField(empty_label="select", label="Choose existing exercise", queryset=MaxValue.objects.all(), required=False)
     create_exercise = forms.CharField(label="Add new Exercise", max_length=100, required=False) 
     reps = forms.DecimalField(max_digits=5, decimal_places=2, min_value=1.0)
     weight = forms.DecimalField(max_digits=5, decimal_places=2, min_value=1.0)
