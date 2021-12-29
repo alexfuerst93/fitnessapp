@@ -13,5 +13,6 @@ from django.test import TestCase
 # print(test_list)
 # print(test_list[0])
 
-weeks = [week for week in range(16)]
-print(weeks)
+test_list = ["cycle3", "cycle10"]
+find_highest = max(test_list)
+print(find_highest)

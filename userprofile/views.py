@@ -5,6 +5,7 @@ from datetime import date
 
 #user creation
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
@@ -31,6 +32,7 @@ def startpage(request):
         else:
             return render(request, "userprofile/startpage.html", {"create_user" : UserCreationForm(), "error" : "Passwords do not match!"})
 
+@login_required
 def profile(request):
     #databases
     max_vals = MaxValue.objects.filter(user_id=request.user)
@@ -44,8 +46,8 @@ def profile(request):
     sorted_musclegroups.sort()
 
     # retrieve unique values of all current cycles
-    all_cycles = list(set([cycle.cycle_name for cycle in workout]))
-    current_cycle = max(all_cycles)
+    all_cycles = list(set([int(cycle.cycle_name[5:]) for cycle in workout]))
+    current_cycle = "cycle" + str(max(all_cycles) )
 
     # filters model to only contain unique cycle+timestamp combinations
     cycles = WorkoutPlan.objects.filter(user_id=request.user).values("cycle_name", "timestamp").order_by("-timestamp").distinct()
@@ -125,6 +127,7 @@ def profile(request):
         return redirect("profile")
 
 
+@login_required
 def logoutuser(request):
     if request.method == "POST":
         logout(request)
@@ -142,6 +145,7 @@ def loginuser(request):
             return redirect('profile')
 
 
+@login_required
 def workout(request, cycle):
     # this is a list of deload weeks, in order to identify them in the template
     weeks = [4, 8, 12, 16]
@@ -167,6 +171,7 @@ def workout(request, cycle):
         return render(request, "userprofile/workout.html", {"workout" : workout, "cycle" : cycle, "weeks" : weeks, "created_at" : created_at[0]})
 
 
+@login_required
 def configure(request):
     if request.method == "GET":
         return render(request, "userprofile/configure.html")
@@ -272,6 +277,7 @@ def configure(request):
 
             return render(request, "userprofile/success.html", {"cycle_name" : cycle_name})
 
+@login_required
 def success(request):
     return render(request, "userprofile/success.html")
 

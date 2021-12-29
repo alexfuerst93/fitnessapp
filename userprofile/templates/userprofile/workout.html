@@ -52,7 +52,12 @@
                     </td>
                     {% endif %}
                 {% else %}
-                <td><div class="d-inline mx-3">{{ entry.exercise_1_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_1_set_2 }}</div><div class="d-inline mx-3">{{ entry.exercise_1_set_3 }}</div><div class="d-inline mx-3">{{ entry.exercise_1_set_4 }}</div></td>
+                    <!-- Special Case for Deload and Strength Weeks -->
+                    {% if entry.week_count in weeks or entry.week_count == 15 %}
+                        <td><div class="d-inline mx-3">{{ entry.exercise_1_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_1_set_2 }}</div></td>
+                    {% else %}
+                        <td><div class="d-inline mx-3">{{ entry.exercise_1_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_1_set_2 }}</div><div class="d-inline mx-3">{{ entry.exercise_1_set_3 }}</div><div class="d-inline mx-3">{{ entry.exercise_1_set_4 }}</div></td>
+                    {% endif %}
                 {% endif %}
             </tr>
             {% endif %}
@@ -76,7 +81,12 @@
                     </td>
                     {% endif %}
                 {% else %}
-                <td><div class="d-inline mx-3">{{ entry.exercise_2_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_2_set_2 }}</div><div class="d-inline mx-3">{{ entry.exercise_2_set_3 }}</div><div class="d-inline mx-3">{{ entry.exercise_2_set_4 }}</div></td>
+                    <!-- Special Case for Deload and Strength Weeks -->
+                    {% if entry.week_count in weeks or entry.week_count == 15 %}
+                        <td><div class="d-inline mx-3">{{ entry.exercise_2_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_2_set_2 }}</div></td>
+                    {% else %}
+                        <td><div class="d-inline mx-3">{{ entry.exercise_2_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_2_set_2 }}</div><div class="d-inline mx-3">{{ entry.exercise_2_set_3 }}</div><div class="d-inline mx-3">{{ entry.exercise_2_set_4 }}</div></td>
+                    {% endif %}
                 {% endif %}
             </tr>
             {% endif %}
@@ -100,7 +110,12 @@
                     </td>
                     {% endif %}
                 {% else %}
-                <td><div class="d-inline mx-3">{{ entry.exercise_3_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_3_set_2 }}</div><div class="d-inline mx-3">{{ entry.exercise_3_set_3 }}</div><div class="d-inline mx-3">{{ entry.exercise_3_set_4 }}</div></td>
+                    <!-- Special Case for Deload and Strength Weeks -->
+                    {% if entry.week_count in weeks or entry.week_count == 15 %}
+                        <td><div class="d-inline mx-3">{{ entry.exercise_3_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_3_set_2 }}</div></td>
+                    {% else %}                
+                        <td><div class="d-inline mx-3">{{ entry.exercise_3_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_3_set_2 }}</div><div class="d-inline mx-3">{{ entry.exercise_3_set_3 }}</div><div class="d-inline mx-3">{{ entry.exercise_3_set_4 }}</div></td>
+                    {% endif %}
                 {% endif %}
             </tr>
             {% endif %}
@@ -124,7 +139,12 @@
                     </td>
                     {% endif %}
                 {% else %}
-                <td><div class="d-inline mx-3">{{ entry.exercise_4_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_4_set_2 }}</div><div class="d-inline mx-3">{{ entry.exercise_4_set_3 }}</div><div class="d-inline mx-3">{{ entry.exercise_4_set_4 }}</div></td>
+                    <!-- Special Case for Deload and Strength Weeks -->
+                    {% if entry.week_count in weeks or entry.week_count == 15 %}
+                        <td><div class="d-inline mx-3">{{ entry.exercise_4_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_4_set_2 }}</div></td>
+                    {% else %}            
+                        <td><div class="d-inline mx-3">{{ entry.exercise_4_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_4_set_2 }}</div><div class="d-inline mx-3">{{ entry.exercise_4_set_3 }}</div><div class="d-inline mx-3">{{ entry.exercise_4_set_4 }}</div></td>
+                    {% endif %}
                 {% endif %}
             </tr>
             {% endif %}
