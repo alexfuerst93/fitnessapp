@@ -4,12 +4,12 @@
 <h1 class="mt-3">Your current Macrocycle</h1>
 <p class="text-center mb-3">Created at: {{ created_at|date:"d.m.Y" }}</p>
 
-<div class="container">
+<div class="container px-md-0">
     
 <div class="row justify-content-center m-0">
     
 {% for entry in workout %}
-<div class="col-5 m-3 p-3 bg-light shadow-sm {% if entry.day_completed %}border border-success{% endif %}">
+<div class="col-12 col-md-5 m-3 p-3 bg-light shadow-sm {% if entry.day_completed %}border border-success{% endif %}">
 
     <form action="{% url 'workout' cycle %}" class="form-inline" method="POST">
     {% csrf_token %}
@@ -18,11 +18,11 @@
             <tr>
                 <th class="table-active" scope="col" colspan="2">Week: {{ entry.week_count }} | Day: {{ entry.day_count}}</th>
                 {% if entry.week_count in weeks %}
-                <th class="table-success" scope="col">Deload</th>
+                <th class="table-success col-5 col-md-6" scope="col">Deload</th>
                 {% elif entry.week_count == 15 %}
-                <th class="table-primary" scope="col">Strength</th>
+                <th class="table-primary col-5 col-md-6" scope="col">Strength</th>
                 {% else %}
-                <th class="table-active" scope="col"></th>
+                <th class="table-active col-5 col-md-6" scope="col"></th>
                 {% endif %}                
             </tr>
             <tr class="table-active">
@@ -34,116 +34,116 @@
         <tbody>
             {% if entry.exercise_1 %}
             <tr>
-                <td>{{ entry.exercise_1 }}</td>
+                <td>{{ entry.exercise_1|truncatechars:12 }}</td>
                 <td>{{ entry.exercise_1_weight }}</td>
                 {% if not entry.day_completed %}
                     <!-- Special Case for Deload and Strength Weeks -->
                     {% if entry.week_count in weeks or entry.week_count == 15 %}
                     <td>
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_1_set_1">
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_1_set_2">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_1_set_1">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_1_set_2">
                     </td>
                     {% else %}
                     <td>
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_1_set_1">
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_1_set_2">
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_1_set_3">
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_1_set_4">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_1_set_1">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_1_set_2">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_1_set_3">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_1_set_4">
                     </td>
                     {% endif %}
                 {% else %}
                     <!-- Special Case for Deload and Strength Weeks -->
                     {% if entry.week_count in weeks or entry.week_count == 15 %}
-                        <td><div class="d-inline mx-3">{{ entry.exercise_1_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_1_set_2 }}</div></td>
+                        <td>{{ entry.exercise_1_set_1 }}, {{ entry.exercise_1_set_2 }}</td>
                     {% else %}
-                        <td><div class="d-inline mx-3">{{ entry.exercise_1_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_1_set_2 }}</div><div class="d-inline mx-3">{{ entry.exercise_1_set_3 }}</div><div class="d-inline mx-3">{{ entry.exercise_1_set_4 }}</div></td>
+                        <td>{{ entry.exercise_1_set_1 }}, {{ entry.exercise_1_set_2 }}, {{ entry.exercise_1_set_3 }}, {{ entry.exercise_1_set_4 }}</td>
                     {% endif %}
                 {% endif %}
             </tr>
             {% endif %}
             {% if entry.exercise_2 %}
             <tr>
-                <td>{{ entry.exercise_2 }}</td>
+                <td>{{ entry.exercise_2|truncatechars:12 }}</td>
                 <td>{{ entry.exercise_2_weight }}</td>
                 {% if not entry.day_completed %}
                     <!-- Special Case for Deload and Strength Weeks -->
                     {% if entry.week_count in weeks or entry.week_count == 15 %}
                     <td>
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_2_set_1">
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_2_set_2">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_2_set_1">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_2_set_2">
                     </td>
                     {% else %}
                     <td>
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_2_set_1">
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_2_set_2">
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_2_set_3">
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_2_set_4">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_2_set_1">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_2_set_2">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_2_set_3">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_2_set_4">
                     </td>
                     {% endif %}
                 {% else %}
                     <!-- Special Case for Deload and Strength Weeks -->
                     {% if entry.week_count in weeks or entry.week_count == 15 %}
-                        <td><div class="d-inline mx-3">{{ entry.exercise_2_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_2_set_2 }}</div></td>
+                        <td>{{ entry.exercise_2_set_1 }}, {{ entry.exercise_2_set_2 }}</td>
                     {% else %}
-                        <td><div class="d-inline mx-3">{{ entry.exercise_2_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_2_set_2 }}</div><div class="d-inline mx-3">{{ entry.exercise_2_set_3 }}</div><div class="d-inline mx-3">{{ entry.exercise_2_set_4 }}</div></td>
+                        <td>{{ entry.exercise_2_set_1 }}, {{ entry.exercise_2_set_2 }}, {{ entry.exercise_2_set_3 }}, {{ entry.exercise_2_set_4 }}</td>
                     {% endif %}
                 {% endif %}
             </tr>
             {% endif %}
             {% if entry.exercise_3 %}
             <tr>
-                <td>{{ entry.exercise_3 }}</td>
+                <td>{{ entry.exercise_3|truncatechars:12 }}</td>
                 <td>{{ entry.exercise_3_weight }}</td>
                 {% if not entry.day_completed %}
                     <!-- Special Case for Deload and Strength Weeks -->
                     {% if entry.week_count in weeks or entry.week_count == 15 %}
                     <td>
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_3_set_1">
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_3_set_2">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_3_set_1">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_3_set_2">
                     </td>
                     {% else %}                
                     <td>
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_3_set_1">
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_3_set_2">
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_3_set_3">
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_3_set_4">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_3_set_1">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_3_set_2">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_3_set_3">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_3_set_4">
                     </td>
                     {% endif %}
                 {% else %}
                     <!-- Special Case for Deload and Strength Weeks -->
                     {% if entry.week_count in weeks or entry.week_count == 15 %}
-                        <td><div class="d-inline mx-3">{{ entry.exercise_3_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_3_set_2 }}</div></td>
+                        <td>{{ entry.exercise_3_set_1 }}, {{ entry.exercise_3_set_2 }}</td>
                     {% else %}                
-                        <td><div class="d-inline mx-3">{{ entry.exercise_3_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_3_set_2 }}</div><div class="d-inline mx-3">{{ entry.exercise_3_set_3 }}</div><div class="d-inline mx-3">{{ entry.exercise_3_set_4 }}</div></td>
+                        <td>{{ entry.exercise_3_set_1 }}, {{ entry.exercise_3_set_2 }}, {{ entry.exercise_3_set_3 }}, {{ entry.exercise_3_set_4 }}</td>
                     {% endif %}
                 {% endif %}
             </tr>
             {% endif %}
             {% if entry.exercise_4 %}
             <tr>
-                <td>{{ entry.exercise_4 }}</td>
+                <td>{{ entry.exercise_4|truncatechars:12 }}</td>
                 <td>{{ entry.exercise_4_weight }}</td>
                 {% if not entry.day_completed %}
                     <!-- Special Case for Deload and Strength Weeks -->
                     {% if entry.week_count in weeks or entry.week_count == 15 %}
                     <td>
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_4_set_1">
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_4_set_2">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_4_set_1">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_4_set_2">
                     </td>
                     {% else %}                
                     <td>
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_4_set_1">
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_4_set_2">
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_4_set_3">
-                        <input class="reps" type="number" min="1" max="20" required="required" name="exercise_4_set_4">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_4_set_1">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_4_set_2">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_4_set_3">
+                        <input class="reps m-1 my-md-1 mx-md-0" type="number" min="1" max="20" required="required" name="exercise_4_set_4">
                     </td>
                     {% endif %}
                 {% else %}
                     <!-- Special Case for Deload and Strength Weeks -->
                     {% if entry.week_count in weeks or entry.week_count == 15 %}
-                        <td><div class="d-inline mx-3">{{ entry.exercise_4_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_4_set_2 }}</div></td>
+                        <td>{{ entry.exercise_4_set_1 }}, {{ entry.exercise_4_set_2 }}</td>
                     {% else %}            
-                        <td><div class="d-inline mx-3">{{ entry.exercise_4_set_1 }}</div><div class="d-inline mx-3">{{ entry.exercise_4_set_2 }}</div><div class="d-inline mx-3">{{ entry.exercise_4_set_3 }}</div><div class="d-inline mx-3">{{ entry.exercise_4_set_4 }}</div></td>
+                        <td>{{ entry.exercise_4_set_1 }}, {{ entry.exercise_4_set_2 }}, {{ entry.exercise_4_set_3 }}, {{ entry.exercise_4_set_4 }}, </td>
                     {% endif %}
                 {% endif %}
             </tr>
@@ -153,34 +153,35 @@
     <input type="hidden" name="day" value="{{ entry.day_count }}">
 
     <!-- Displays the rep targets for a given workout -->
-    <p class="col footnote m-1">[Icon] 
-        {{ entry.max_weight_percentage }}% of 1RM<br>
+    <ul class="col-5 footnote m-1">
+        <li>{{ entry.max_weight_percentage }}% of 1RM</li>
 
-        {% if entry.week_count == 4 %} Prim: 3 reps |
-        {% elif entry.week_count == 8 or entry.week_count == 16 %} Prim: 2 reps |
-        {% elif entry.week_count == 12 %} Prim: 1 rep | 
-        {% elif entry.week_count == 1 %} Prim: 10 reps |
-        {% elif entry.week_count == 2 or entry.week_count == 5 %} Prim: 8 reps |
-        {% elif entry.week_count == 3 or entry.week_count == 6 or entry.week_count == 9 %} Prim: 6 reps |
-        {% elif entry.week_count == 7 or entry.week_count == 10 or entry.week_count == 13 %} Prim: 4 reps |
-        {% elif entry.week_count == 11 or entry.week_count == 14 %} Prim: 2 reps |
-        {% elif entry.week_count == 15 %} Prim: AMRAP |
-        {% endif %}
-
-        {% if entry.week_count == 4 %} Sec: 6 reps
+        
+        <li>{% if entry.week_count == 4 %} Prim: 3 reps
+        {% elif entry.week_count == 8 or entry.week_count == 16 %} Prim: 2 reps
+        {% elif entry.week_count == 12 %} Prim: 1 rep
+        {% elif entry.week_count == 1 %} Prim: 10 reps
+        {% elif entry.week_count == 2 or entry.week_count == 5 %} Prim: 8 reps
+        {% elif entry.week_count == 3 or entry.week_count == 6 or entry.week_count == 9 %} Prim: 6 reps
+        {% elif entry.week_count == 7 or entry.week_count == 10 or entry.week_count == 13 %} Prim: 4 reps
+        {% elif entry.week_count == 11 or entry.week_count == 14 %} Prim: 2 reps
+        {% elif entry.week_count == 15 %} Prim: AMRAP
+        {% endif %}</li>
+        
+        <li>{% if entry.week_count == 4 %} Sec: 6 reps
         {% elif entry.week_count == 8 %} Sec: 5 reps
         {% elif entry.week_count == 12 or entry.week_count == 16 %} Sec: 4 reps
         {% elif entry.week_count < 4 %} Sec: 12 reps
         {% elif entry.week_count > 4 and entry.week_count < 12 %} Sec: 10 reps
         {% elif entry.week_count > 12 and entry.week_count < 16 %} Sec: 8 reps
-        {% endif %}
+        {% endif %}</li>
 
-    </p>
-    <div class="col-4 m-3">
+    </ul>
+    <div class="col-5">
         {% if entry.day_completed %}
         <button class="btn btn-success" disabled>Completed</button>
         {% else %}
-        <input type="submit" class="btn btn-primary" name="workout_done" value="Complete Day {{ entry.day_count }}">
+        <input type="submit" class="btn btn-outline-primary" name="workout_done" value="Complete">
         {% endif %}
     </div>
     </form>
