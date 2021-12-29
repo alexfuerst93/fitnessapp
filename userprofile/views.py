@@ -275,11 +275,12 @@ def configure(request):
                 # this loop is over = 1 month of workouts
                 weight_sec_pointer += 1
 
-            return render(request, "userprofile/success.html", {"cycle_name" : cycle_name})
+            return success(request, cycle_name)
+            # return render(request, "userprofile/success.html", {"cycle_name" : cycle_name})
 
 @login_required
-def success(request):
-    return render(request, "userprofile/success.html")
+def success(request, cycle_name=False):
+    return render(request, "userprofile/success.html", {"cycle_name" : cycle_name})
 
 def contact(request):
     return render(request, "userprofile/contact.html")

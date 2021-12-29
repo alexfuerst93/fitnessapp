@@ -28,5 +28,5 @@ urlpatterns = [
     path('profile/', views.profile, name="profile"),
     path('configure-next-cycle/', views.configure, name="configure"),
     path('workout/<str:cycle>', views.workout, name="workout"),
-    path('success', views.success, name="success")
+    path('success/', views.success, name="success")
 ]

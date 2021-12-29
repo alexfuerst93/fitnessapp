@@ -6,35 +6,35 @@
 <div class="container">
 
 <div class="row justify-content-between align-items-center bg-light mx-0 my-3 p-3 rounded {% if step_1 %} border border-success {% endif %}">
-    <div class="col-10">
+    <div class="col-12 col-md-9">
         <p class="m-0"><b>1. Have you configured all your primary and accessory exercises?</b><br>You cannot change exercises within a macrocycle.</p>
     </div>
-    <div class="col">
+    <div class="col mt-3 my-md-0">
         <form action="{% url 'configure' %}" method="POST">
             {% csrf_token %}
             <input type="submit" class="btn btn-primary" name="exercises_confirmed" value="Yes">
         </form>
     </div>
-    <div class="col">
+    <div class="col mt-3 my-md-0">
         <a href="{% url 'profile' %}" class="btn btn-danger">No</a>
     </div>
 </div>
 
 {% if step_1 %}
 <div class="row justify-content-between align-items-center bg-light mx-0 my-3 p-3 rounded {% if step_1 and step_2 %} border border-success {% endif %}">
-    <div class="col">
+    <div class="col-12 col-md-7">
         <p class="m-0"><b>2. How many days per week do you want to workout?</b></p>
     </div>
 
-    <form action="{% url 'configure' %}" class="form-inline" method="POST">
+    <form action="{% url 'configure' %}" class="form-inline col" method="POST">
         {% csrf_token %}
-            <select name="days" class="col form-control" required>
+            <select name="days" class="col mt-3 m-md-0 form-control" required>
                 <option value="">select</option>
                 <option value="3">3 days</option>
                 <option value="4">4 days</option>
                 <option value="5">5 days</option>
             </select>
-        <div class="col">
+        <div class="col mt-3 m-md-0">
             <input type="submit" class="btn btn-primary" name="day_amount" value="Confirm">
         </div>
     </form>
@@ -47,13 +47,13 @@
 <div class="bg-light mx-0 my-3 p-3 rounded">
 
 <div class="row justify-content-between align-items-center py-2 px-3">
-    <div class="col-8">
+    <div class="col-12 col-md-8">
         <p class="m-0"><b>3. Choose your exercises</b></p>
     </div>
     <form action="" method="POST">
         {% csrf_token %}
         <input type="hidden" name="days" value="{{ days }}">
-    <div class="col">
+    <div class="col mt-3 m-md-0">
         <input type="submit" class="btn btn-primary" name="configuration_completed" value="Create my next cycle!">
     </div>
 </div>
@@ -63,7 +63,7 @@
 {% endif %}
 
 <div class="row">
-    <div class="col-4 my-2">
+    <div class="col-12 col-md-6 col-lg-4 my-2">
     <table class="table table-bordered table-sm">
         <thead class="thead-dark">
             <tr>
@@ -106,7 +106,7 @@
     </table>
     </div>
     
-    <div class="col-4 my-2">
+    <div class="col-12 col-md-6 col-lg-4 my-2">
     <table class="table table-bordered table-sm">
         <thead class="thead-dark">
             <tr>
@@ -149,7 +149,7 @@
     </table>
     </div>
 
-    <div class="col-4 my-2">
+    <div class="col-12 col-md-6 col-lg-4 my-2">
     <table class="table table-bordered table-sm">
         <thead class="thead-dark">
             <tr>
@@ -193,7 +193,7 @@
     </div>
 
     {% if days == 4 or days == 5%}
-    <div class="col-4 my-2">
+    <div class="col-12 col-md-6 col-lg-4 my-2">
     <table class="table table-bordered table-sm">
         <thead class="thead-dark">
             <tr>
@@ -237,7 +237,7 @@
     </div>
     {% endif %}
     {% if days == 5 %}
-    <div class="col-4 my-2">
+    <div class="col-12 col-md-6 col-lg-4 my-2">
     <table class="table table-bordered table-sm">
         <thead class="thead-dark">
             <tr>
