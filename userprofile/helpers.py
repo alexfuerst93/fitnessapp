@@ -32,14 +32,15 @@ def workout_validator(idx, max, sec):
     return True
 
 
-def workout_configurator(days):
+def workout_configurator(days, request):
     # depending on how many days the user wants to workout each week, the following HTML table needs more configuration forms
     # step_1 and step_2 are needed to render the appropriate amount of content on the HTML page
-    configure_workout_day1 = ConfigureWorkout()
-    configure_workout_day2 = ConfigureWorkout()
-    configure_workout_day3 = ConfigureWorkout()
-    configure_workout_day4 = ConfigureWorkout()
-    configure_workout_day5 = ConfigureWorkout()
+    # request is the unique user_id needed to filter the model / form
+    configure_workout_day1 = ConfigureWorkout(request)
+    configure_workout_day2 = ConfigureWorkout(request)
+    configure_workout_day3 = ConfigureWorkout(request)
+    configure_workout_day4 = ConfigureWorkout(request)
+    configure_workout_day5 = ConfigureWorkout(request)
 
     if days == 3:
         return {

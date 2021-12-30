@@ -9,21 +9,40 @@ class Exercise_Pool_Form(ModelForm):
         fields = ["title", "muscle", "high_range", "mid_range", "low_range"]
 
 class CreateMaxValue(forms.Form):
-    choose_exercise = forms.ModelChoiceField(empty_label="select", label="Choose existing exercise", queryset=MaxValue.objects.all(), required=False)
+
+    # overwrite __init__ to filter ModelChoiceField by user_id
+    def __init__(self, request, *args, **kwargs):
+        super(CreateMaxValue, self).__init__(*args, **kwargs)
+        self.fields['choose_exercise'] = forms.ModelChoiceField(empty_label="select", label="Choose existing exercise", queryset=MaxValue.objects.filter(user_id=request), required=False)
+
+    # choose_exercise = forms.ModelChoiceField(empty_label="select", label="Choose existing exercise", queryset=MaxValue.objects.all(), required=False)
     create_exercise = forms.CharField(label="Add new Exercise", max_length=100, required=False) 
     reps = forms.DecimalField(max_digits=5, decimal_places=2, min_value=1.0)
     weight = forms.DecimalField(max_digits=5, decimal_places=2, min_value=1.0)
 
 class ConfigureWorkout(forms.Form):
-    # check if ALL exercises are displayed or just the ones created by this specific user
-    first_max_exercise = forms.ModelChoiceField(empty_label="select", queryset=MaxValue.objects.all(), required=False) 
-    first_sec_exercise = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.all(), required=False)
-    second_max_exercise = forms.ModelChoiceField(empty_label="select", queryset=MaxValue.objects.all(), required=False) 
-    second_sec_exercise = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.all(), required=False)
-    third_max_exercise = forms.ModelChoiceField(empty_label="select", queryset=MaxValue.objects.all(), required=False) 
-    third_sec_exercise = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.all(), required=False)
-    fourth_max_exercise = forms.ModelChoiceField(empty_label="select", queryset=MaxValue.objects.all(), required=False) 
-    fourth_sec_exercise = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.all(), required=False)
+
+    def __init__(self, request, *args, **kwargs):
+        super(ConfigureWorkout, self).__init__(*args, **kwargs)
+        self.fields['first_max_exercise'] = forms.ModelChoiceField(empty_label="select", queryset=MaxValue.objects.filter(user_id=request), required=False)
+        self.fields['first_sec_exercise'] = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.filter(user_id=request), required=False)
+        self.fields['second_max_exercise'] = forms.ModelChoiceField(empty_label="select", queryset=MaxValue.objects.filter(user_id=request), required=False)
+        self.fields['second_sec_exercise'] = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.filter(user_id=request), required=False)
+        self.fields['third_max_exercise'] = forms.ModelChoiceField(empty_label="select", queryset=MaxValue.objects.filter(user_id=request), required=False)
+        self.fields['third_sec_exercise'] = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.filter(user_id=request), required=False)
+        self.fields['fourth_max_exercise'] = forms.ModelChoiceField(empty_label="select", queryset=MaxValue.objects.filter(user_id=request), required=False)
+        self.fields['fourth_sec_exercise'] = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.filter(user_id=request), required=False)
+
+
+
+    # first_max_exercise = forms.ModelChoiceField(empty_label="select", queryset=MaxValue.objects.all(), required=False) 
+    # first_sec_exercise = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.all(), required=False)
+    # second_max_exercise = forms.ModelChoiceField(empty_label="select", queryset=MaxValue.objects.all(), required=False) 
+    # second_sec_exercise = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.all(), required=False)
+    # third_max_exercise = forms.ModelChoiceField(empty_label="select", queryset=MaxValue.objects.all(), required=False) 
+    # third_sec_exercise = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.all(), required=False)
+    # fourth_max_exercise = forms.ModelChoiceField(empty_label="select", queryset=MaxValue.objects.all(), required=False) 
+    # fourth_sec_exercise = forms.ModelChoiceField(empty_label="select", queryset=Exercise_Pool.objects.all(), required=False)
 
 class AchievedReps(ModelForm):
     class Meta:

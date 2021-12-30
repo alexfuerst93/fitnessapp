@@ -40,14 +40,17 @@ def profile(request):
     workout = WorkoutPlan.objects.filter(user_id=request.user)
     #forms
     add_exercise = Exercise_Pool_Form()
-    form_maxval = CreateMaxValue()
+    form_maxval = CreateMaxValue(request.user)
     
     sorted_musclegroups = [musclegroup[0] for musclegroup in musclegroups]
     sorted_musclegroups.sort()
 
     # retrieve unique values of all current cycles
     all_cycles = list(set([int(cycle.cycle_name[5:]) for cycle in workout]))
-    current_cycle = "cycle" + str(max(all_cycles) )
+    if all_cycles:
+        current_cycle = "cycle" + str(max(all_cycles))
+    else:
+        current_cycle = False
 
     # filters model to only contain unique cycle+timestamp combinations
     cycles = WorkoutPlan.objects.filter(user_id=request.user).values("cycle_name", "timestamp").order_by("-timestamp").distinct()
@@ -181,7 +184,7 @@ def configure(request):
     
     elif "day_amount" in request.POST:
         days = int(request.POST["days"])
-        return render(request, "userprofile/configure.html", workout_configurator(days))
+        return render(request, "userprofile/configure.html", workout_configurator(days, request.user))
 
     elif "configuration_completed" in request.POST:
         days = int(request.POST["days"])
@@ -202,14 +205,14 @@ def configure(request):
         # now validate the user's input
         if not check_input([first_max_exercise, first_sec_exercise, second_max_exercise, second_sec_exercise, third_max_exercise, third_sec_exercise, fourth_max_exercise, fourth_sec_exercise]):
             # all lists are empty, which means the user didn't select a single exercise
-            setup = workout_configurator(days)
+            setup = workout_configurator(days, request.user)
             setup["error"] = "Please select exercises!"
             return render(request, "userprofile/configure.html", setup)
 
         elif not all([workout_validator(days, first_max_exercise, first_sec_exercise), workout_validator(days, second_max_exercise, second_sec_exercise), 
                     workout_validator(days, third_max_exercise, third_sec_exercise), workout_validator(days, fourth_max_exercise, fourth_sec_exercise)]):
             # make form validations to ensure the user decided everytime between max and sec exercise
-            setup = workout_configurator(days)
+            setup = workout_configurator(days, request.user)
             setup["error"] = "Choose between primary and accessory for each exercise."
             return render(request, "userprofile/configure.html", setup)
 

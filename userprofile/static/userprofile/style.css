@@ -53,3 +53,16 @@ hr {
     width: 4em;
     height: 2em;
 }
+
+#id_first_max_exercise, #id_first_sec_exercise, #id_second_max_exercise, #id_second_sec_exercise, #id_third_max_exercise, #id_third_sec_exercise, #id_fourth_max_exercise, #id_fourth_sec_exercise {
+    padding: 0.25em;
+    margin: 0.25em;
+    border: 1px solid grey;
+    border-radius: 7.5%;
+    width: 85%;
+}
+
+#id_choose_exercise {
+    padding: 0.25em;
+    margin: 0.25em;
+}
