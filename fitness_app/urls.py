@@ -18,7 +18,7 @@ from django.urls import path
 from userprofile import views, models
 
 urlpatterns = [
-    path('admin/', admin.site.urls), #afuerst / 0000
+    path('admin/', admin.site.urls),
     path('', views.startpage, name="home"),
     path('contactme/', views.contact, name="contact"),
 
