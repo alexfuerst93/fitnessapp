@@ -8,11 +8,6 @@ h3 {
     color: white;
 }
 
-img {
-    max-width: 25%;
-    max-height: 25%;
-}
-
 #tab1, #tab2 {
     background-color: #e6f5ff;
 }
@@ -65,4 +60,12 @@ hr {
 #id_choose_exercise {
     padding: 0.25em;
     margin: 0.25em;
+}
+
+img {
+    max-width: 75%;
+}
+
+@media (max-width: 576px) {
+    h1 {font-size: 2em;}
 }

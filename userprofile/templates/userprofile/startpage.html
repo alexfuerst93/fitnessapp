@@ -4,7 +4,8 @@
 
 <div class="container">
 
-<h1>Easily configure your Fitness-App based on "Beyond bigger leaner stronger"!</h1>
+<h1 class="mx-3 mt-3 text-center">Master Advanced Workouts With Ease</h1>
+<p class="mb-3 text-center">Based on Michael Matthew's Training Method "Beyond Bigger Leaner Stronger"</p>
 
 <div class="row justify-content-center bg-light">
     <div class="col-10 col-md-6 col-lg-3 my-5 p-3 text-white bg-dark shadow rounded">
@@ -23,12 +24,28 @@
     </div>
 </div> 
 
-<div class="row justify-content-center my-5">
-    <h2>List at least 3 benefits for the user what this app is able to do:</h2>
-    {% load static %}
-    <img src="{% static '/userprofile/images/beach.jpg' %}" alt="beach">
-    <p>Hier gehört noch ein erklärender Text, was Beyond Bigger Leaner Stronger eigentlich tut</p>
+<h2 class="text-center m-4">Explore your benefits:</h2>
+{% load static %}
+<div class="row justify-content-around">
+        <div class="col-12 col-md-5 bg-light p-3 m-2 text-center">
+            <img src="{% static '/userprofile/images/calculate_1rm.png' %}" class="img-reponsive" alt="calculate your one rep value">
+            <p class="m-3 p-3 bg-dark text-white shadow rounded">Calculate your 1RM and save your progress of primary exercises.</p>
+        </div>
+        <div class="col-12 col-md-5 bg-light p-3 m-2 text-center">
+            <img src="{% static '/userprofile/images/manage_exercises.png' %}" class="img-reponsive" alt="manage all your exercises">
+            <p class="m-3 p-3 bg-dark text-white shadow rounded">View, add and modify all your favorite exercises.</p>
+        </div>
+        <div class="col-12 col-md-5 bg-light p-3 m-2 text-center">
+            <img src="{% static '/userprofile/images/configure_workout.png' %}" class="img-reponsive" alt="configure your workout">
+            <p class="m-3 p-3 bg-dark text-white shadow rounded">Easily configure your total workout plan based on how many days per week you want to train.</p>
+        </div>
+        <div class="col-12 col-md-5 bg-light p-3 m-2 text-center">
+            <img src="{% static '/userprofile/images/train_macrocycle.png' %}" class="img-reponsive" alt="train a full macrocycle">
+            <p class="m-3 p-3 bg-dark text-white shadow rounded">Train a full macrocyle with months of workouts. All the necessary information at a glance!</p>
+        </div>
 </div>
+
+<div class="m-5"></div>
 
 </div>
 
