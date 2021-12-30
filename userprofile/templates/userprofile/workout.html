@@ -9,7 +9,7 @@
 <div class="row justify-content-center m-0">
     
 {% for entry in workout %}
-<div class="col-12 col-md-5 m-3 p-3 bg-light shadow-sm {% if entry.day_completed %}border border-success{% endif %}">
+<div class="col-12 col-lg-5 m-3 p-3 bg-light shadow-sm {% if entry.day_completed %}border border-success{% endif %}">
 
     <form action="{% url 'workout' cycle %}" class="form-inline" method="POST">
     {% csrf_token %}
@@ -143,7 +143,7 @@
                     {% if entry.week_count in weeks or entry.week_count == 15 %}
                         <td>{{ entry.exercise_4_set_1 }}, {{ entry.exercise_4_set_2 }}</td>
                     {% else %}            
-                        <td>{{ entry.exercise_4_set_1 }}, {{ entry.exercise_4_set_2 }}, {{ entry.exercise_4_set_3 }}, {{ entry.exercise_4_set_4 }}, </td>
+                        <td>{{ entry.exercise_4_set_1 }}, {{ entry.exercise_4_set_2 }}, {{ entry.exercise_4_set_3 }}, {{ entry.exercise_4_set_4 }}</td>
                     {% endif %}
                 {% endif %}
             </tr>

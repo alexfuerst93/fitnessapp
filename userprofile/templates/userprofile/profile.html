@@ -9,24 +9,34 @@
     
     <!-- User needs to have at least one created macrocycle to continue one-->
     {% if cycles %}
-    <a href="{% url 'workout' current_cycle %}" class="btn btn-primary mx-2">Continue your current workout!</a>
+    <a href="{% url 'workout' current_cycle %}" class="btn btn-primary m-2">Continue your current workout!</a>
     {% endif %}
 
     <!-- User needs to create at least one exercise to start workout configuration -->
     {% if maxvals or exercises %}
-    <a href="{% url 'configure' %}" class="btn btn-outline-dark mx-2">Configure your next macrocycle!</a>
+    <a href="{% url 'configure' %}" class="btn btn-outline-primary m-2">Configure your next macrocycle!</a>
     {% else %}
 
-    <p class="bg-info p-3 text-white">[ICON] <b>Let's start strong, athlete. Create some primary and secondary exercises.</b></p>
+    <p class="bg-info p-3 text-white"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-square-fill mx-2" viewBox="0 0 16 16">
+        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm8.93 4.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+      </svg> <b>Let's start strong, athlete. Create some primary and secondary exercises.</b></p>
         {% endif %}
 
     
 <h2 class="m-3">Manage your primary Exercises</h2>
 {% if error %}
-<p class="bg-danger p-3 text-white">[ICON]<b>{{ error }}</b></p>
+<p class="bg-danger p-3 text-white">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-diamond-fill mx-2" viewBox="0 0 16 16">
+    <path d="M9.05.435c-.58-.58-1.52-.58-2.1 0L.436 6.95c-.58.58-.58 1.519 0 2.098l6.516 6.516c.58.58 1.519.58 2.098 0l6.516-6.516c.58-.58.58-1.519 0-2.098L9.05.435zM8 4c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995A.905.905 0 0 1 8 4zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+    </svg>
+<b>{{ error }}</b></p>
 {% endif %}
 {% if ergebnis %}
-<p class="bg-success p-3 text-white">[ICON]<b>{{ ergebnis }}</b></p>
+<p class="bg-success p-3 text-white">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-square-fill mx-2" viewBox="0 0 16 16">
+    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z"/>
+    </svg>
+<b>{{ ergebnis }}</b></p>
 {% endif %}
 <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item"><a class="nav-link active" id="calculate-tab" data-toggle="tab" href="#tab1" role="tab">Calculate</a></li>
@@ -80,7 +90,11 @@
 <div class="my-5"></div>
 <h2 class="m-3">Manage your secondary exercises</h2>
 {% if form_error %}
-<p class="bg-danger p-3 text-white"><b>[ICON] {{ form_error }}</b></p>
+<p class="bg-danger p-3 text-white"><b>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-diamond-fill mx-2" viewBox="0 0 16 16">
+    <path d="M9.05.435c-.58-.58-1.52-.58-2.1 0L.436 6.95c-.58.58-.58 1.519 0 2.098l6.516 6.516c.58.58 1.519.58 2.098 0l6.516-6.516c.58-.58.58-1.519 0-2.098L9.05.435zM8 4c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995A.905.905 0 0 1 8 4zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+    </svg>    
+{{ form_error }}</b></p>
 {% endif %}
 <form action="{% url 'profile' %}" method="POST" class="p-3 sec_exercise">
     {% csrf_token %}
@@ -90,9 +104,9 @@
     </div>
     <p>Plug in the weight you can lift for <b>12 reps</b> (high), <b>10 reps</b> (mid) and <b>8 reps</b> (low).<br>Fields are optional, but having them displayed in your workout plan is recommended:</p>
     <div class="form-row">
-        <div class="col"><label for="high">High:</label><input class="mx-3 form-control sec_ranges" type="number" min="0" max="999" name="high_range" value="0" id="high"></div>
-        <div class="col"><label for="mid">Mid:</label><input class="mx-3 form-control sec_ranges" type="number" min="0" max="999" name="mid_range" value="0" id="mid"></div>
-        <div class="col"><label for="low">Low:</label><input class="mx-3 form-control sec_ranges" type="number" min="0" max="999" name="low_range" value="0" id="low"></div>
+        <div class="col"><label for="high">High:</label><input class="mx-3 form-control sec_ranges" type="number" required min="0" max="999" name="high_range" value="0" id="high"></div>
+        <div class="col"><label for="mid">Mid:</label><input class="mx-3 form-control sec_ranges" type="number" required min="0" max="999" name="mid_range" value="0" id="mid"></div>
+        <div class="col"><label for="low">Low:</label><input class="mx-3 form-control sec_ranges" type="number" required min="0" max="999" name="low_range" value="0" id="low"></div>
     </div>
     <button class="btn btn-success mt-3" name="added_exercise">Add new secondary exercise</button>
 </form>
@@ -102,7 +116,9 @@
 
     <div class="row mt-3 mx-0 rounded">
         <a class="btn btn-success btn-block" data-toggle="collapse" data-target="#{{ musclegroup }}" aria-expanded="true" aria-controls="{{ musclegroup }}">
-            <div class="col p-1 text-white">{{ musclegroup|title }} [ICON]</div></a>
+            <div class="col p-1 text-white">{{ musclegroup|title }} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill mx-2" viewBox="0 0 16 16">
+                <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+              </svg></div></a>
     </div>
 
     {% for exercise in exercises %}
@@ -113,7 +129,9 @@
 
         <div class="row mx-0 mb-2 rounded">
             <a class="btn btn-default bg-light btn-block shadow-sm" data-toggle="collapse" data-target="#ex{{ exercise.id }}" aria-expanded="true" aria-controls="ex{{ exercise.id }}">
-                <div class="col p-1">{{ exercise.title }} [ICON]</div></a>
+                <div class="col p-1">{{ exercise.title }} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down mx-2" viewBox="0 0 16 16">
+                    <path d="M3.204 5h9.592L8 10.481 3.204 5zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659z"/>
+                  </svg></div></a>
         </div>
     
         <div class="row mx-0 mb-2 justify-content-around rounded sec_exercise collapse" id="ex{{ exercise.id }}">
@@ -133,9 +151,9 @@
                         </select></div>
                     </div>
                     <div class="row mx-0 my-2 p-0">
-                        <div class="col-4"><label for="high">High:</label><input class="text-secondary form-control sec_ranges" type="number" min="0" max="999" name="high_range" id="high" value="{{ exercise.high_range }}"></div>
-                        <div class="col-4"><label for="mid">Mid:</label><input class="text-secondary form-control sec_ranges" type="number" min="0" max="999" name="mid_range" id="mid" value="{{ exercise.mid_range }}"></div>
-                        <div class="col-4"><label for="low">Low:</label><input class="text-secondary form-control sec_ranges" type="number" min="0" max="999" name="low_range" id="low" value="{{ exercise.low_range }}"></div>
+                        <div class="col-4"><label for="high">High:</label><input class="text-secondary form-control sec_ranges" type="number" required min="0" max="999" name="high_range" id="high" value="{{ exercise.high_range }}"></div>
+                        <div class="col-4"><label for="mid">Mid:</label><input class="text-secondary form-control sec_ranges" type="number" required min="0" max="999" name="mid_range" id="mid" value="{{ exercise.mid_range }}"></div>
+                        <div class="col-4"><label for="low">Low:</label><input class="text-secondary form-control sec_ranges" type="number" required min="0" max="999" name="low_range" id="low" value="{{ exercise.low_range }}"></div>
                     </div>
                     <hr class="col-10 m-3">
                     <div class="row mx-0 justify-content-between">
