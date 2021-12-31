@@ -5,6 +5,7 @@
 
 # Venv
 venv_fitnessapp/
+*.env
 
 # Compiled Java class files
 *.class

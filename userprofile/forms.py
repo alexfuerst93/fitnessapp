@@ -17,6 +17,7 @@ class CreateMaxValue(forms.Form):
 
     # choose_exercise = forms.ModelChoiceField(empty_label="select", label="Choose existing exercise", queryset=MaxValue.objects.all(), required=False)
     create_exercise = forms.CharField(label="Add new Exercise", max_length=100, required=False) 
+    # reps should be integer?
     reps = forms.DecimalField(max_digits=5, decimal_places=2, min_value=1.0)
     weight = forms.DecimalField(max_digits=5, decimal_places=2, min_value=1.0)
 

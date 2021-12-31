@@ -98,8 +98,8 @@
 {% endif %}
 <form action="{% url 'profile' %}" method="POST" class="p-3 sec_exercise">
     {% csrf_token %}
-    <div class="form-row">
-        <div class="form-group col-7">{{ form.title.label_tag }} {{ form.title }}</div>
+    <div class="form-row justify-content-between">
+        <div class="form-group col-6">{{ form.title.label_tag }} {{ form.title }}</div>
         <div class="form-group col-5">{{ form.muscle.label_tag }} {{ form.muscle }}</div>
     </div>
     <p>Plug in the weight you can lift for <b>12 reps</b> (high), <b>10 reps</b> (mid) and <b>8 reps</b> (low).<br>Fields are optional, but having them displayed in your workout plan is recommended:</p>
@@ -178,7 +178,7 @@
     <h2 class="m-3">View all your past macrocycles</h3>
     {% for cycle in cycles %}
     <a href="{% url 'workout' cycle.cycle_name %}" class="btn btn-outline-secondary m-1 mb-3">
-        <p class="m-1"><b>{{ cycle.cycle_name|capfirst }}</b><br>{{ cycle.timestamp|date:"d.m.Y" }}</p>
+        <p class="m-0 m-md-1"><b>{{ cycle.cycle_name|capfirst }}</b><br>{{ cycle.timestamp|date:"d.m.Y" }}</p>
     </a>
     {% endfor %}
 {% endif %}

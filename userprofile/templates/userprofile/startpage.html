@@ -7,6 +7,7 @@
 <h1 class="mx-3 mt-3 text-center">Master Advanced Workouts With Ease</h1>
 <p class="mb-3 text-center">Based on Michael Matthew's Training Method "Beyond Bigger Leaner Stronger"</p>
 
+{% if not user.is_authenticated %}
 <div class="row justify-content-center bg-light">
     <div class="col-10 col-md-6 col-lg-3 my-5 p-3 text-white bg-dark shadow rounded">
     <form action="" method="post">
@@ -22,7 +23,10 @@
         <button type="submit" class="btn btn-primary">Sign up!</button>
     </form>
     </div>
-</div> 
+</div>
+{% else %}
+<div class="m-5"></div>
+{% endif %}
 
 <h2 class="text-center m-4">Explore your benefits:</h2>
 {% load static %}

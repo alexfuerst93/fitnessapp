@@ -62,6 +62,10 @@ hr {
     margin: 0.25em;
 }
 
+#id_title {
+    width: 10em;
+}
+
 img {
     max-width: 75%;
 }
