@@ -50,4 +50,4 @@ Thumbs.db
 *.csv
 
 # db
-*.sqlite3
+db.sqlite3
