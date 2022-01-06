@@ -104,9 +104,9 @@
     </div>
     <p>Plug in the weight you can lift for <b>12 reps</b> (high), <b>10 reps</b> (mid) and <b>8 reps</b> (low).<br>Fields are optional, but having them displayed in your workout plan is recommended:</p>
     <div class="form-row">
-        <div class="col"><label for="high">High:</label><input class="mx-3 form-control sec_ranges" type="number" required min="0" max="999" name="high_range" value="0" id="high"></div>
-        <div class="col"><label for="mid">Mid:</label><input class="mx-3 form-control sec_ranges" type="number" required min="0" max="999" name="mid_range" value="0" id="mid"></div>
-        <div class="col"><label for="low">Low:</label><input class="mx-3 form-control sec_ranges" type="number" required min="0" max="999" name="low_range" value="0" id="low"></div>
+        <div class="col-4"><label for="high">High:</label><input class="mx-3 form-control sec_ranges" type="number" step="0.01" required min="0" max="999" name="high_range" value="0" id="high"></div>
+        <div class="col-4"><label for="mid">Mid:</label><input class="mx-3 form-control sec_ranges" type="number" step="0.01" required min="0" max="999" name="mid_range" value="0" id="mid"></div>
+        <div class="col-4"><label for="low">Low:</label><input class="mx-3 form-control sec_ranges" type="number" step="0.01" required min="0" max="999" name="low_range" value="0" id="low"></div>
     </div>
     <button class="btn btn-success mt-3" name="added_exercise">Add new secondary exercise</button>
 </form>
@@ -151,9 +151,9 @@
                         </select></div>
                     </div>
                     <div class="row mx-0 my-2 p-0">
-                        <div class="col-4"><label for="high">High:</label><input class="text-secondary form-control sec_ranges" type="number" required min="0" max="999" name="high_range" id="high" value="{{ exercise.high_range }}"></div>
-                        <div class="col-4"><label for="mid">Mid:</label><input class="text-secondary form-control sec_ranges" type="number" required min="0" max="999" name="mid_range" id="mid" value="{{ exercise.mid_range }}"></div>
-                        <div class="col-4"><label for="low">Low:</label><input class="text-secondary form-control sec_ranges" type="number" required min="0" max="999" name="low_range" id="low" value="{{ exercise.low_range }}"></div>
+                        <div class="col-4"><label for="high">High:</label><input class="text-secondary form-control sec_ranges" type="number" step="0.01" required min="0" max="999" name="high_range" id="high" value="{{ exercise.high_range }}"></div>
+                        <div class="col-4"><label for="mid">Mid:</label><input class="text-secondary form-control sec_ranges" type="number" step="0.01" required min="0" max="999" name="mid_range" id="mid" value="{{ exercise.mid_range }}"></div>
+                        <div class="col-4"><label for="low">Low:</label><input class="text-secondary form-control sec_ranges" type="number" step="0.01" required min="0" max="999" name="low_range" id="low" value="{{ exercise.low_range }}"></div>
                     </div>
                     <hr class="col-10 m-3">
                     <div class="row mx-0 justify-content-between">

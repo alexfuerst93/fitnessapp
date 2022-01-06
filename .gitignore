@@ -50,4 +50,4 @@ Thumbs.db
 *.csv
 
 # db
-# fitness_app/db.sqlite3
+*.sqlite3
