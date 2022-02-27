@@ -1,10 +1,10 @@
 # Fitnessapp for athletes
 
-The webapp is geared towards athletes who consistently lifted weights for at least three years.
-Advanced lifters are faced with highly complex workout routines to still increase their performance even after several years of strength training.
+The webapp is geared towards athletes who consistently lifted weights for at least three years.</br>
+Advanced lifters are faced with highly complex workout routines to still increase their performance even after several years of strength training.</br>
 In order to ease the complexity, this web application was built. Specifically, it implements the training method from [Beyond Bigger Leaner Stronger](https://www.amazon.de/Beyond-Bigger-Leaner-Stronger-Advanced/dp/1938895258).
 
-:sparkles: The project was built using Python, Django and Bootstrap.
+:sparkles: The project was built using Python, Django and Bootstrap.</br>
 :tada: Go ahead and try it out: https://alexfuerst.eu.pythonanywhere.com/
 
 
