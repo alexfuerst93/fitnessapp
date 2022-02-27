@@ -11,7 +11,7 @@ In order to ease the complexity, this web application was built. Specifically, i
 ## Key features:
 
 Once an athlete creates an account, access to the fitnessapp and all its features are granted:
-- Calculate 1RM (= most weight the athlete is able to lift for 1 repitition)
+- Calculate 1RM (= most weight the athlete is able to lift for 1 repetition)
 - Add, modify and delete exercises
 - Configure a sixteen week long workout cycle
 - Track your progress in each workout
